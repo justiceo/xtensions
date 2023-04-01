@@ -1,10 +1,10 @@
 ---
 layout: home
 permalink: "/"
-title: "Curate is a premium portfolio for <strong>Jekyll.</strong>"
-description: "Showcase your projects, work and portfolio with multiple layouts and styles."
-meta_description: "Jekyll Curate is a premium Jekyll blog theme"
-meta_title: Jekyll Curate
+title: "You deserve <strong>safe</strong> browser extensions"
+description: "Essential kit is a side-project to build safe, secure and high-quality alternatives to critical browser extensions for today's internet users."
+meta_description: "Essential kit is a collection of safe, secure and high-quality browser extensions"
+meta_title: Essential kit for your browser
 subscribe: false
 
 projects:

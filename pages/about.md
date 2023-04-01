@@ -1,46 +1,33 @@
 ---
 layout: basic
-title: "About Us"
-date: 2018-11-28T15:15:34+10:00
+title: "About Essential Kit"
+date: 2023-03-31
 permalink: "/about/"
-description: "Business plan hackathon handshake responsive web design."
+description: "My name is Justice, and I am an avid internet user like you."
 image: "/assets/images/gen/content/content-5.webp"
 ---
 
-# Creating Modern Websites
+## The browser is the new desktop OS
 
-Web design encompasses many different skills and disciplines in the production and maintenance of websites.
+We spend the majority of our time on a laptop/desktop using a browser and some estimates put it at [56%](https://www.broadbandsearch.net/blog/mobile-desktop-internet-usage-statistics) and growing.
 
-Often many individuals will work in teams covering different aspects of the design process, although some designers will cover them all. Web design partially overlaps web engineering in the broader scope of web development.
+The [rising popularity of chromebooks](https://www.androidpolice.com/2021/07/30/theres-no-stopping-chromebooks-from-dominating-the-world/) emphasizes our burgeoning dependence on the browser and the gradual shift of applications from native to web deployments.
 
-## What is Web Design?
+As browsers grow in usage, so do the extensions that make them delightful; from [adblockers](https://chrome.google.com/webstore/search/adblocker) to [custom cursors](https://chrome.google.com/webstore/search/custom%20cursor). While much has been done to save netizens from malicious or data-grabbing websites, but not as much effort has been dedicated in the browser extensions front.
 
-User experience is about how a user interacts with, and experiences, a particular product, system or service. As a UX designer, you should consider the Why, What and How of product use.
+## Browser extensions are the new attack vector
 
-{% include framework/shortcodes/figure.html src="/assets/images/gen/content/content-1.webp" title="Steve Francia" caption="Designing in Figma" alt="Photo of designing a website in Figma" link="https://figma.com" target="\_blank" %}
+It feels like every other week, I see a headline like "[Chrome extensions with 1.4M installs covertly track visits and inject code](https://arstechnica.com/information-technology/2022/08/google-removes-extensions-that-covertly-tracked-users-and-injected-javascript/)". People have gotten smart about not installing .exe files from random websites, same cannot be said of browser extensions; the prevailing theory is that if it has over 100K users and 5 star rating, it must be good.
 
-## Front-end Development
+This personally affected me in 2018 when an extension I loved got blocklisted because it was sniffing user data and reselling it to marketers. Out of frustration, I created [an alternative](https://chrome.google.com/webstore/detail/write-better/nnnnnpmcdcloafmfkiihafnjidjkfmek?hl=en) to that extension that was [open-source](https://github.com/justiceo/write-better) and collected 0 data, in fact, there was no server at all. From there, the idea of Essential Kit was born: a collection of safe, secure, high-quality alternatives to critical browser extensions.
 
-The What addresses the things people can do with a product—its functionality. Finally, the How relates to the design of functionality in an accessible and aesthetically pleasant way. UX designers start with the Why before determining the What and then, finally, the How in order to create products that users can form meaningful experiences with. In software designs, you will need to ensure the product’s “substance” comes through an existing device and offers a seamless, fluid experience.
+## Making essential extensions safe, secure and high-quality
+Essential kit is a passion project of mine. Occassionally, I evaluate the list of popular extensions that I use to determine if any of them is a candidate for Essential kit. 
 
-> As a UX designer, you should consider the Why, What and How of product use.
+I prefer extensions that 
+* can work solely offline - as they remove the risk of data exfilteration.
+* are open-source - so I can inpsect the code if I get sceptical.
+* have high usage - as such are often the target of security and privacy attacks.
 
-Web designers are expected to have an awareness of usability and if their role involves creating markup then they are also expected to be up to date with web accessibility guidelines.
+In the process, I have developed processes that make it easy for me to create, publish and maintain the essential kit extensions with little bandwidth (mostly through automation).
 
-## Design Systems
-
-A Design System is a set of interconnected patterns and shared practices coherently organized to aid in digital product design and development of products such as apps or websites.
-
-{% include framework/shortcodes/youtube.html id='2M6dJ2Uynhg' %}
-
-## Process
-
-There are two primary jobs involved in creating a website: the web designer and web developer, who often work closely together on a website. The web designers are responsible for the visual aspect, which includes the layout, coloring and typography of a web page.
-
-- User experience research
-- Visual design and illustration
-- Programming and coding
-
-![Design In Figma]({{ "/assets/images/gen/content/content-2.webp" | relative_url }})
-
-Web designers will also have a working knowledge of markup languages such as HTML and CSS, although the extent of their knowledge will differ from one web designer to another.
