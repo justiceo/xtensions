@@ -4,7 +4,6 @@ title: "Dictionary"
 description: "A modern, comprehensive dictionary for all languages"
 date: 2018-12-20
 weight: 4
-permalink: /projects/dictionary
 thumbnail: "/assets/images/gen/projects/project-4-6-thumbnail.webp"
 image: "/assets/images/gen/projects/project-4-1.webp"
 client: "RGA Agency"
