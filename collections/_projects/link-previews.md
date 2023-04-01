@@ -1,24 +1,22 @@
 ---
 layout: project-right
 title: "Link & Search Previews"
-description: "In contrast subsymbolic processing specifies no such rules a priori and relies on emergent properties of processing units"
+description: "Preview links and instantly performs searches on the same page instead of opening new tabs"
 date: 2018-11-03T10:20:00Z
 weight: 1
-thumbnail: "/assets/images/gen/projects/project-1-1-thumbnail.webp"
-image: "/assets/images/gen/projects/project-1-2.webp"
-categories: ["Development"]
-client: "Dubai Star"
-role: "Building Designer"
+thumbnail: "/assets/images/gen/projects/link-preview-logo.png"
+image: "/assets/images/gen/projects/link-preview-screenshot.jpeg"
+role: "Developer"
 gallery:
-  - image: "/assets/images/gen/projects/project-1-1.webp"
-    caption: "<strong>Above:</strong> North easterly aspect showing curved design"
-  - image: "/assets/images/gen/projects/project-1-2.webp"
-    caption: "<strong>Above:</strong> Rear offices square design in contrast"
+  - image: "/assets/images/gen/projects/link-preview-screenshot.jpeg"
+    caption: "<strong>Above:</strong> Previewing a link from within wikipedia"
+  - image: "/assets/images/gen/projects/link-preview-screenshot.jpeg-2"
+    caption: "<strong>Above:</strong> Previewing a search result on Google"
 gallery_limit: 2
 ---
 
-Architecture is both the process and the product of planning, designing, and constructing buildings or other structures.Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art.
+This extension enables you to browse faster online in two ways: preview search results on same page and secondly preview any link from the search result page.
 
-The practice, which began in the prehistoric era, has been used as a way of expressing culture for civilizations on all seven continents.
+To perform a search in preview mode, simply select the text and the click on the "search" tooltip button that appears.
 
-Architecture began as rural, oral vernacular architecture that developed from trial and error to successful replication. Ancient urban architecture was preoccupied with building religious structures and buildings symbolizing the political power of rulers until Greek and Roman architecture shifted focus to civic virtues.
+To preview a URL, hover over the URL and click on the "preview" tooltip that appears.

@@ -1,14 +1,12 @@
 ---
-layout: project
+layout: project-left
 title: "Dictionary"
 description: "A modern, comprehensive dictionary for all languages"
 date: 2018-12-20
 weight: 4
 thumbnail: "/assets/images/gen/projects/dictionary-logo.png"
 image: "/assets/images/gen/projects/dictionary.jpeg"
-client: "RGA Agency"
-categories: ["Development"]
-role: "Building Designer"
+role: "Developer"
 gallery:
   - image: "/assets/images/gen/projects/dictionary.jpeg"
 ---
