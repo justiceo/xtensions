@@ -10,7 +10,7 @@ role: "Developer"
 gallery:
   - image: "/assets/images/gen/projects/link-preview-screenshot.jpeg"
     caption: "<strong>Above:</strong> Previewing a link from within wikipedia"
-  - image: "/assets/images/gen/projects/link-preview-screenshot.jpeg-2"
+  - image: "/assets/images/gen/projects/link-preview-screenshot-2.jpeg"
     caption: "<strong>Above:</strong> Previewing a search result on Google"
 gallery_limit: 2
 ---
