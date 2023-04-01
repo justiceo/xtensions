@@ -3,8 +3,8 @@ layout: basic
 title: "About Essential Kit"
 date: 2023-03-31
 permalink: "/about/"
-description: "My name is Justice, and I am an avid internet user like you."
-image: "/assets/images/gen/content/content-5.webp"
+description: "Making the extensions you cannot live without safe and of high-quality"
+image: "/assets/images/gen/content/popular-browser-extensions.png"
 ---
 
 ## The browser is the new desktop OS

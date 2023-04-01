@@ -2,7 +2,7 @@
 layout: home
 permalink: "/"
 title: "You deserve <strong>safe</strong> browser extensions"
-description: "Essential kit is a side-project to build safe, secure and high-quality alternatives to critical browser extensions for today's internet users."
+description: "Essential kit is a project to build safe, secure and high-quality alternatives to critical browser extensions for today's internet users."
 meta_description: "Essential kit is a collection of safe, secure and high-quality browser extensions"
 meta_title: Essential kit for your browser
 subscribe: false
