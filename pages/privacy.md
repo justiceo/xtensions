@@ -1,13 +1,15 @@
 ---
-title: "Privacy Policy"
-date: 2021-24-01
 layout: basic
+title: "Privacy Policy"
+date: 2023-03-31
 permalink: "/privacy-policy/"
 ---
 
+> TLDR; We do not collect your personal information (name, email address, location etc) and so cannot and will not sell such information. We may collect diagnostic information (e.g. application crash logs) to help us deliver on our quality promise to you.
+
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
-We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the [Privacy Policy Generator](https://www.privacypolicies.com/privacy-policy-generator/).
+By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of a [Privacy Policy Generator](#).
 
 # Interpretation and Definitions
 
@@ -35,16 +37,6 @@ For the purposes of this Privacy Policy:
 # Collecting and Using Your Personal Data
 
 ## Types of Data Collected
-
-### Personal Data
-
-While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:
-
-- Email address
-
-- First name and last name
-
-- Usage Data
 
 ### Usage Data
 
@@ -185,4 +177,4 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 
 If you have any questions about this Privacy Policy, You can contact us:
 
-- By email: example@example.com
+- By email: info@essentialkit.org
