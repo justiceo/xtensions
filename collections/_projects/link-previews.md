@@ -1,6 +1,6 @@
 ---
 layout: project-right
-title: "Brutalist Office Building"
+title: "Link & Search Previews"
 description: "In contrast subsymbolic processing specifies no such rules a priori and relies on emergent properties of processing units"
 date: 2018-11-03T10:20:00Z
 weight: 1

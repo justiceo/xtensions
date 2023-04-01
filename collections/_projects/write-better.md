@@ -1,19 +1,18 @@
 ---
-layout: project-top
-title: "Subway"
-description: "An open source machine learning library written in Python"
+layout: project-left
+title: "Write Better"
+description: "A spectacular building, designed by the Valencian architect Santiago Calatrava."
 date: 2018-12-20
-weight: 4
-permalink: /projects/project-4
-thumbnail: "/assets/images/gen/projects/project-4-6-thumbnail.webp"
-image: "/assets/images/gen/projects/project-4-1.webp"
-client: "RGA Agency"
+weight: 2
+thumbnail: "/assets/images/gen/projects/project-3-1-thumbnail.webp"
+image: "/assets/images/gen/projects/project-3-1.webp"
+client: "Region of Valencia"
 categories: ["Development"]
 role: "Building Designer"
 gallery:
-  - image: "/assets/images/gen/projects/project-4-1.webp"
-  - image: "/assets/images/gen/projects/project-4-4.webp"
-  - image: "/assets/images/gen/projects/project-4-7.webp"
+  - image: "/assets/images/gen/projects/project-3-1.webp"
+  - image: "/assets/images/gen/projects/project-3-4.webp"
+  - image: "/assets/images/gen/projects/project-3-7.webp"
 ---
 
 Architecture is both the process and the product of planning, designing, and constructing buildings or other structures.Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art.
