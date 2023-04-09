@@ -4,22 +4,25 @@ title: "Voice Search"
 description: "Breathing new life into old industrial estates"
 date: 2018-12-20
 weight: 3
-thumbnail: "/assets/images/gen/projects/project-2-1-thumbnail.webp"
-image: "/assets/images/gen/projects/project-2-1.webp"
+thumbnail: "/assets/images/gen/projects/voice-search.png"
+image: "/assets/images/gen/projects/voice-search-slow-typing.jpeg"
 categories: ["Development"]
 client: "Brisbane City Council"
 role: "Building Designer"
 gallery:
-  - image: "/assets/images/gen/projects/project-2-1.webp"
-  - image: "/assets/images/gen/projects/project-2-2.webp"
-  - image: "/assets/images/gen/projects/project-2-5.webp"
-  - image: "/assets/images/gen/projects/project-2-4.webp"
-  - image: "/assets/images/gen/projects/project-2-3.webp"
-  - image: "/assets/images/gen/projects/project-2-6.webp"
+  - image: "/assets/images/gen/projects/voice-search-slow-typing.jpeg"
 ---
 
-Architecture is both the process and the product of planning, designing, and constructing buildings or other structures.Architectural works, in the material form of buildings, are often perceived as cultural symbols and as works of art.
+This voice search extension is part of my effort to bring voice forward experiences to the browser.
 
-The practice, which began in the prehistoric era, has been used as a way of expressing culture for civilizations on all seven continents.
+When compared to typing, voice is:
 
-Architecture began as rural, oral vernacular architecture that developed from trial and error to successful replication. Ancient urban architecture was preoccupied with building religious structures and buildings symbolizing the political power of rulers until Greek and Roman architecture shifted focus to civic virtues.
+* 🏃‍♀️ Faster: Like 3X faster than typing.
+* 🍹 Easier: You can dictate notes while pacing, eating, driving.
+* 👶 Natural: Voice queries are more expressive, leading to more featured snippets in search results.
+* ♿ Accessible: Everyone can speak, 2yr olds, tired grannies, illitrates, name it.
+
+My goal is to make it voice interaction as ubiquitous as typing... on the web. There are two parts to it
+
+👥 Helping end-users discover and use voice input.
+🏢 Working with publishers to make their content more accessible through voice.
