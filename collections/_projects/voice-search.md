@@ -1,14 +1,11 @@
 ---
 layout: project # alternative layouts: project, project-left, project-right, project-top
 title: "Voice Search"
-description: "Breathing new life into old industrial estates"
+description: "Search the web with your voice, faster, and in your language"
 date: 2018-12-20
 weight: 3
 thumbnail: "/assets/images/gen/projects/voice-search.png"
 image: "/assets/images/gen/projects/voice-search-slow-typing.jpeg"
-categories: ["Development"]
-client: "Brisbane City Council"
-role: "Building Designer"
 gallery:
   - image: "/assets/images/gen/projects/voice-search-slow-typing.jpeg"
 ---

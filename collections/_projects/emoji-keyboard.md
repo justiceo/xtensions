@@ -1,14 +1,11 @@
 ---
 layout: project-left
 title: "Emoji Keyboard"
-description: "A spectacular building, designed by the Valencian architect Santiago Calatrava."
+description: "An extension that brings emoji support to text input."
 date: 2018-12-20
 weight: 2
 thumbnail: "/assets/images/gen/projects/emoji-board.jpeg"
 image: "/assets/images/gen/projects/emoji-board.jpeg"
-client: "Region of Valencia"
-categories: ["Development"]
-role: "Building Designer"
 gallery:
   - image: "/assets/images/gen/projects/emoji-board.jpeg"
 ---
