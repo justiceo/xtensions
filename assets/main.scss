@@ -1,0 +1,46 @@
+---
+---
+
+@import "minima";
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@100,300;112.5,300&display=swap');
+body {
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Martian Mono', monospace;
+    color: rgba(0,0,0, 0.87);
+    font-size: 90%;
+    line-height: 1.8em;
+}
+
+footer .feed-subscribe,
+header nav {
+    display: none;
+}
+
+.page-heading {
+    font-size: 1.8em;
+}
+.post-link {
+    font-size: 1em;
+}
+.post-link .arrow {
+    font-size: 1.5em;
+}
+.download-link {
+    font-size: 0.8em;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid;
+}
+.post-list-heading {
+    font-size: 1em;
+    margin-bottom: 30px;
+}
+.post-list>li {
+    margin-bottom: 40px;
+}
+.post-content h2 {
+    font-size: revert;
+    line-height: 1.5em;
+}
