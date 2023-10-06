@@ -1,7 +1,7 @@
 ---
 permalink: /
 layout: home
-title: Essential kit
+title: Welcome
 list_title: Featured Extensions
 ---
 
@@ -14,10 +14,6 @@ Essential kit is a project to build safe, secure and high-quality alternatives t
 {% include_relative featured_extensions.md %}
 
 <style>
-header.site-header {
-    visibility: hidden;
-}
-
 .frontpage-separator {
     margin-top: 60px;
     margin-bottom: 60px;

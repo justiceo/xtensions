@@ -4,7 +4,6 @@ layout: page
 title: About
 ---
 
-<br />
 ## The browser is the new desktop OS
 
 We spend the majority of our time on a laptop/desktop using a browser and some estimates put it at [56%](https://www.broadbandsearch.net/blog/mobile-desktop-internet-usage-statistics) and growing.
@@ -14,7 +13,6 @@ The [rising popularity of chromebooks](https://www.androidpolice.com/2021/07/30/
 As browsers grow in usage, so do the extensions that make them delightful; from [adblockers](https://chrome.google.com/webstore/search/adblocker) to [custom cursors](https://chrome.google.com/webstore/search/custom%20cursor). While much has been done to save netizens from malicious or data-grabbing websites, not as much effort has been dedicated in the browser extensions front.
 
 <br />
-
 ## Browser extensions are the new attack vector
 
 It feels like every other week, I see a headline like "[Chrome extensions with 1.4M installs covertly track visits and inject code](https://arstechnica.com/information-technology/2022/08/google-removes-extensions-that-covertly-tracked-users-and-injected-javascript/)". People have gotten smart about not installing .exe files from random websites, same cannot be said of browser extensions; the prevailing theory is that if it has over 100K users and 5 star rating, it must be good.

@@ -12,12 +12,24 @@ body {
     line-height: 1.6em;
 }
 
+.site-header {
+    border-bottom: none;
+}
+
+.site-title {
+    font-size: 1.35em;
+    font-weight: normal;
+}
+
 footer .feed-subscribe,
 header nav {
     display: none;
 }
 
-.page-heading {
+.page-content {
+    padding: 45px 0;
+}
+.page-heading, .post-title {
     font-size: 1.8em;
 }
 .post-link {
