@@ -1,10 +1,11 @@
 ---
-title: "Search & Link Previews"
-published_date: 2020-4-17
-layout: post
-chrome_id: mmmfofondapflhgbdidadejnechhjocm
-website: https://betterpreviews.com
-featured: true
+title               : "Search & Link Previews"
+published_date      : 2020-4-17
+layout              : extension
+permalink           : /search-and-link-previews
+chrome_id           : mmmfofondapflhgbdidadejnechhjocm
+website             : https://betterpreviews.com
+featured            : true
 ---
 
 This is my solution to the too-many-open-tabs problem. Opening a new tab is easy, closing it is hard. This extension helps by showing links and search results in a preview pane inside the current tab, that way I don't have to open a new tab in the first place.

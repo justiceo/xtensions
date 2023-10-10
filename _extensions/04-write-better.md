@@ -1,9 +1,10 @@
 ---
-title: "Write Better"
-published_date: 2017-4-17
-layout: post
-chrome_id: nnnnnpmcdcloafmfkiihafnjidjkfmek
-website: https://github.com/WritingAid/write-better
+title               : "Write Better"
+published_date      : 2017-4-17
+layout              : extension
+permalink           : /write-better
+chrome_id           : nnnnnpmcdcloafmfkiihafnjidjkfmek
+website             : https://github.com/WritingAid/write-better
 ---
 
 An English language grammar tool for Google docs that improves the quality of technical writings.

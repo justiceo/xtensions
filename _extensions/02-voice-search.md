@@ -1,5 +1,6 @@
 ---
 title               : "Voice Search"
+permalink           : /voice-search
 description         : Voice Search enables you to search the web using your voice 🗣️, simply by clicking on the browser icon 🌐.
 published_date      : 2020-4-17
 layout              : extension
