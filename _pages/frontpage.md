@@ -18,6 +18,7 @@ Essential kit is a project to build safe, secure and high-quality alternatives t
     margin-top: 60px;
     margin-bottom: 60px;
     border-width: 0.1px;
-    border-color: rgba(255,255,255, 0.8);
+    border: 0.1px solid #ddd;
+    opacity: 1;
 }
 </style>
