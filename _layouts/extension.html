@@ -23,6 +23,7 @@ layout: base
       </div>
     </div>
 
+    {%- if page.features.size > 0 -%}
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4 py-5">
       {%- for feature in page.features -%}
       <div class="col feature-item"> 
@@ -32,26 +33,30 @@ layout: base
           <p>{{ feature.description }}</p>
         </div>
       </div>
-    {%- endfor -%}
+      {%- endfor -%}
     </div>
+    {%- endif -%}
 
-    <!--   -->
+    {%- if page.screenshots.size > 0 -%}
     <div id="carouselExampleIndicators" class="carousel slide rounded-3 shadow-lg mb-5"  data-bs-ride="carousel">
       <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        {% assign num = page.screenshots.size | minus: 1 %}
+        {%- for i in (0..num) -%}
+          <button type="button" data-bs-target="#carouselExampleIndicators" 
+            data-bs-slide-to="{{ i }}" 
+            aria-label="Slide {{ i }}"
+            {% if forloop.first %}
+            class="active" aria-current="true"
+            {%- endif -%}
+            ></button>
+        {%- endfor -%}
       </div>
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="/assets/imgs/scenic-bg.jpeg" class="d-block w-100 border rounded-3" alt="...">
+        {%- for screenshot in page.screenshots -%}
+        <div class="carousel-item {% if forloop.first %} active {%- endif -%}" >
+          <img src="{{ screenshot }}" class="d-block w-100 border rounded-3" alt="...">
         </div>
-        <div class="carousel-item">
-          <img src="/assets/imgs/scenic-bg.jpeg" class="d-block w-100 border rounded-3" alt="...">
-        </div>
-        <div class="carousel-item">
-          <img src="/assets/imgs/scenic-bg.jpeg" class="d-block w-100 border rounded-3" alt="...">
-        </div>
+        {%- endfor -%}
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -62,52 +67,29 @@ layout: base
         <span class="visually-hidden">Next</span>
       </button>
     </div>
+    {%- endif -%}
 
     {{ content }}
 
+    {%- if page.faqs.size > 0 -%}
     <hr class="m-5">
     <h2>Frequently asked questions</h2>
     <div class="accordion accordion-flush" id="accordionFlushExample">
+      {%- for faq in page.faqs -%}
       <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-            Accordion Item #1
+            data-bs-target="#flush-collapse-{{ faq.id }}" aria-expanded="false" aria-controls="flush-collapse-{{ faq.id }}">
+            {{ faq.title }}
           </button>
         </h2>
-        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the
-            <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+        <div id="flush-collapse-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">{{ faq.description }}</div>
         </div>
       </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-            Accordion Item #2
-          </button>
-        </h2>
-        <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the
-            <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being
-            filled with some actual content.</div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-            Accordion Item #3
-          </button>
-        </h2>
-        <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-          <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the
-            <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting
-            happening here in terms of content, but just filling up the space to make it look, at least at first glance,
-            a bit more representative of how this would look in a real-world application.</div>
-        </div>
-      </div>
+      {%- endfor -%}
     </div>
+    {%- endif -%}
 
   </div>
 
