@@ -88,10 +88,21 @@ a.btn {
 .accordion-item {
     border: 1px solid !important;
     margin: 18px 0px !important;
+    border-radius: 8px !important;
+    overflow: hidden;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     background-color: black;
     padding: 20px 0;
+}
+
+.feedback {
+    margin-top: 50px;
+    padding: 30px;
+    text-align: center;
+    background: rgba(0,0,0, 0.05);
+    border: 1px solid #aaa;
+    border-radius: 8px;
 }
