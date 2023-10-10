@@ -58,3 +58,40 @@ header nav {
 .footer-col-wrapper {
     font-size: 0.9em;
 }
+
+a.btn {
+    font-size: revert;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start; 
+    margin-bottom: 25px;
+
+    span {
+        margin-right: 12px;
+        align-self: center;
+        flex-shrink: 0;
+    }
+
+    h3 {
+        font-size: 18px;
+        color: #000;
+        margin-bottom: 5px;
+    }
+
+    p {
+        margin-bottom: 0
+    }
+}
+
+.accordion-item {
+    border: 1px solid !important;
+    margin: 18px 0px !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: black;
+    padding: 20px 0;
+}
