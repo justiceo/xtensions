@@ -2,7 +2,7 @@
   <h2 class="post-list-heading">{{ page.list_title | default: "Extensions" }}</h2>
   <ul class="post-list">
     {%- for extension in site.extensions -%}
-    {%- if extension.featured -%}
+    {%- if extension.show_on_homepage -%}
     <li>
       <h3>
         <a class="post-link" href="{{ extension.website }}" target="_blank">

@@ -1,26 +1,30 @@
 ---
-title               : "Voice Search"
-permalink           : /voice-search
-description         : Voice Search enables you to search the web using your voice 🗣️, simply by clicking on the browser icon 🌐.
-published_date      : 2020-4-17
 layout              : extension
+permalink           : /voice-search
+title               : Voice Search
+description         : Voice Search enables you to search the web using your voice 🗣️, simply by clicking on the browser icon 🌐.
+created_date        : 2020-4-17
 chrome_id           : agmgoemhckhccgibmoigonndjhjllcoh
 website             : https://audate.app
-featured            : true
 github_repo         : https://github.com/audateapp/voice-search
-logo                : /assets/imgs/logo-128x128.png
+feedback_url        : https://forms.gle/DuMbMQ76caFQee3z6
+logo_128            : /assets/imgs/voice-search-logo-128x128.png
+
+# Preferably a GIF showing how the extension works.
 hero_image          : /assets/imgs/voice-search.jpeg
+
+# These would be displayed in a carousel and should showcase the different UIs of the extension.
 screenshots:
   - /assets/imgs/voice-search.jpeg
   - /assets/imgs/voice-search.jpeg
 
+show_on_homepage    : true
 content_class       : voice-search
-ratings             : 4.8
-active_users        : 10000
-feedback_url        : https://forms.google.com
+ratings             : 5.0
+active_users        : 11K+
 
+# For icons, see https://fonts.google.com/icons
 features            :
-
   - title           : Voice is Faster
     description     : “You can speak 110-150 words per min, as opposed to avg person's typing 38-40 wpm” - @purnavirji
     icon_name       : rocket
@@ -64,7 +68,7 @@ features            :
 
 faqs                :
   - title           : Does it work on other webkit browsers like Edge, Opera, Brave?
-    description     : It does not
+    description     : It does not.
     id              : one
 
   - title           : Why can't I change the microphone?
