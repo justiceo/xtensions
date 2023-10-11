@@ -5,7 +5,7 @@
     {%- if extension.show_on_homepage -%}
     <li>
       <h3>
-        <a class="post-link" href="{{ extension.website }}" target="_blank">
+        <a class="post-link" href="{{ extension.url }}">
           {{ extension.title | escape }} <span class="arrow">&#x2197;</span>
         </a>
       </h3>
