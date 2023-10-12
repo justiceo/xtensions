@@ -2,7 +2,7 @@
 title               : 
 published_date      : 2020-4-17
 layout              : extension
-permalink           : /floating-calculator
+permalink           : /scientific-calculator
 chrome_id           : mbfnbhfjnjeedaknilkfegfnnmmmmpmn
 website             : https://floatingcalc.com
 featured            : true
