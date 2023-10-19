@@ -1,14 +1,6 @@
 ---
-title               : 
-published_date      : 2020-4-17
 layout              : extension
 permalink           : /scientific-calculator
-chrome_id           : mbfnbhfjnjeedaknilkfegfnnmmmmpmn
-website             : https://floatingcalc.com
-featured            : true
-
-layout              : extension
-permalink           : /floating-calculator
 title               : Floating Scientific Calculator
 description         : A floating scientific calculator anywhere you need it
 created_date        : 2020-4-17

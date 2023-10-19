@@ -12,7 +12,7 @@ title: Extensions
     <li>
       <span class="post-meta">{{ extension.published_date | date: date_format }}</span>
       <h3>
-        <a class="post-link" href="{{ extension.website }}" target="_blank">
+        <a class="post-link" href="{{ extension.url }}">
           {{ extension.title | escape }} <span class="arrow">&#x2197;</span>
         </a>
       </h3>
