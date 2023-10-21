@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/content-script/previewr.css"],
+  "sourcesContent": [".winbox {\n  border-radius: 10px;\n  overflow: hidden;\n}\n\n.nav-away {\n  background-size: 15px auto;\n  filter: invert(1);\n}\n\n.nav-back,\n.open-options {\n  background-size: 20px auto;\n  filter: invert(1);\n}\n"],
+  "mappings": ";AAAA;AACE;AACA;AAAA;AAGF;AACE;AACA;AAAA;AAGF;AAAA;AAEE;AACA;AAAA;",
+  "names": []
+}
