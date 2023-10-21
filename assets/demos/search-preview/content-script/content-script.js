@@ -14253,6 +14253,7 @@ Url: ${_getEventFilterUrl(event)}`
       this.isVisible = false;
       this.navStack = [];
       this.displayReaderMode = false;
+      this.isDemo = false;
     }
     init() {
       if (this.inIframe()) {
@@ -14299,6 +14300,9 @@ Url: ${_getEventFilterUrl(event)}`
     }
     async handleMessage(message) {
       let urlStr;
+      if (message.mode === "demo") {
+        this.isDemo = true;
+      }
       if (message.action === "copy") {
         navigator.clipboard.writeText(message.data);
         return;
@@ -14339,10 +14343,10 @@ Url: ${_getEventFilterUrl(event)}`
       const winboxOptions = {
         icon: this.headerIconUrlBase + url.hostname,
         x: "right",
-        y: "50px",
+        y: this.isDemo ? "500px" : "50px",
         right: 10,
-        width: "55%",
-        height: "80%",
+        width: this.isDemo ? "45%" : "55%",
+        height: this.isDemo ? "40%" : "80%",
         class: ["no-max", "no-full"],
         index: await this.getMaxZIndex(),
         onclose: () => {

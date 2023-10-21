@@ -22,7 +22,7 @@ active_users        : 1K+
 demo_content        : |
   <div style="display: flex; background: #eee; padding: 20px">
      <link rel="stylesheet" href="/assets/demos/search-preview/content-script/content-script.css">
-     <script src="/assets/demos/search-preview/content-script/content-script.js"></script>
+     <script async defer src="/assets/demos/search-preview/content-script/content-script.js"></script>
     <div style="text-align: left;">
       <h3>Live demo</h3>
 
@@ -38,7 +38,7 @@ demo_content        : |
 
   <script>
     window.postMessage(
-      { application: "better-previews", action: "search", data: "Generative AI" },
+      { application: "better-previews", action: "search", data: "Generative AI", mode: "demo" },
       window.location.origin
     );
   </script>
