@@ -19,12 +19,12 @@ show_on_homepage    : true
 content_class       : calculator
 ratings             : 4.9
 active_users        : 7K+
-demo_content        : | # Preferably a GIF showing how the extension works.
-  <div style="background: #eee; padding: 20px">
+demo_content        : |
+  <div class="calculator">
     <h3>Live demo</h3>
-    <iframe src="/assets/demos/calculator/calc.html" width="100%" height="400" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden; margin-bottom: 10px"></iframe>
-    <div style="text-align: left;">      
-      <p style="background-color: lightyellow; padding: 20px; border-radius: 8px; border: 1px solid #ddd">
+    <iframe src="/assets/demos/calculator/calc.html"></iframe>
+    <div>      
+      <p class="notice">
         Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.
       </p>
     </div>

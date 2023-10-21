@@ -20,20 +20,20 @@ content_class       : search-preview
 ratings             : 4.88
 active_users        : 1K+
 demo_content        : |
-  <div style="display: flex; background: #eee; padding: 20px">
-     <link rel="stylesheet" href="/assets/demos/search-preview/content-script/content-script.css">
-     <script async defer src="/assets/demos/search-preview/content-script/content-script.js"></script>
-    <div style="text-align: left;">
-      <h3>Live demo</h3>
+  <div class="search-preview-demo">
+    <link rel="stylesheet" href="/assets/demos/search-preview/content-script/content-script.css">
+    <script async defer src="/assets/demos/search-preview/content-script/content-script.js"></script>
 
-    <img width="100%" src="/assets/imgs/search-tooltip.png" style="border-radius: 8px; border: 1px solid #888" >
-      <p style="background-color: lightyellow; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px">
-        Note:<br>Several features (including certain URL previews) of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.        
-      </p>
+    <h3>Live demo</h3>
+
+    <img src="/assets/imgs/search-tooltip.png">
+
+    <p class="notice">
+      Note:<br>Several features (including certain URL previews) of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.        
+    </p>
       
-      <p>You can trigger and update the demo (floating panel) by selecting text and clicking "Search".</p>
-      <p>You can trigger the preview functionality by hovering over a link like this <a href="https://en.wikipedia.org/wiki/ChatGPT">Wikipedia article on ChatGPT</a>.</p>
-    </div>
+    <p>You can trigger and update the demo (floating panel) by selecting text and clicking "Search".</p>
+    <p>You can trigger the preview functionality by hovering over a link like this <a href="https://en.wikipedia.org/wiki/ChatGPT">Wikipedia article on ChatGPT</a>.</p>
   </div> 
 
   <script>
