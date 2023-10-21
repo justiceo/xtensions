@@ -8,12 +8,12 @@ chrome_id           : mmmfofondapflhgbdidadejnechhjocm
 website             : https://betterpreviews.com
 github_repo         : https://github.com/essentialkit/link-previews
 feedback_url        : https://forms.gle/DtfV94iG4oqXQFFo9
-logo_128            : /assets/imgs/search-preview-logo-128x128.png
+logo_128            : /assets/demos/search-preview/assets/logo-128x128.png
 
 # These would be displayed in a carousel and should showcase the different UIs of the extension.
 screenshots:
-  - /assets/imgs/search-preview-screenshot1.jpeg
-  - /assets/imgs/search-preview-screenshot2.jpeg
+  - /assets/demos/search-preview/assets/screenshot2.jpeg
+  - /assets/demos/search-preview/assets/search-preview-too-many-tabs.webp
 
 show_on_homepage    : true
 content_class       : search-preview
