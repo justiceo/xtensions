@@ -20,8 +20,16 @@ content_class       : calculator
 ratings             : 4.9
 active_users        : 7K+
 demo_content        : | # Preferably a GIF showing how the extension works.
-  <img src="/assets/imgs/calculator-hero.jpeg" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image"
-              width="700" height="500" loading="lazy"> 
+  <div style="background: #eee; padding: 20px">
+    <h3>Live demo</h3>
+    <iframe src="/assets/demos/calculator/calc.html" width="600" height="400" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden;"></iframe>
+    <div style="text-align: left;">
+      
+      <p style="background-color: lightyellow; padding: 20px; border-radius: 8px; border: 1px solid #ddd">
+        Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.
+      </p>
+    </div>
+  </div> 
 
 # For icons, see https://fonts.google.com/icons
 features            :
