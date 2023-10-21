@@ -19,9 +19,29 @@ show_on_homepage    : true
 content_class       : search-preview
 ratings             : 4.88
 active_users        : 1K+
-demo_content        : | # Preferably a GIF showing how the extension works.
-  <img src="/assets/imgs/search-preview-too-many-tabs.webp" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image"
-              width="700" height="500" loading="lazy"> 
+demo_content        : |
+  <div style="display: flex; background: #eee; padding: 20px">
+     <link rel="stylesheet" href="/assets/demos/search-preview/content-script/content-script.css">
+     <script src="/assets/demos/search-preview/content-script/content-script.js"></script>
+    <div style="text-align: left;">
+      <h3>Live demo</h3>
+
+    <img width="100%" src="/assets/imgs/search-tooltip.png" style="border-radius: 8px; border: 1px solid #888" >
+      <p style="background-color: lightyellow; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px">
+        Note:<br>Several features (including certain URL previews) of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.        
+      </p>
+      
+      <p>You can trigger and update the demo (floating panel) by selecting text and clicking "Search".</p>
+      <p>You can trigger the preview functionality by hovering over a link like this <a href="https://en.wikipedia.org/wiki/ChatGPT">Wikipedia article on ChatGPT</a>.</p>
+    </div>
+  </div> 
+
+  <script>
+    window.postMessage(
+      { application: "better-previews", action: "search", data: "Generative AI" },
+      window.location.origin
+    );
+  </script>
 
 # For icons, see https://fonts.google.com/icons
 features            :

@@ -14248,7 +14248,6 @@ Url: ${_getEventFilterUrl(event)}`
 `;
   var Previewr = class {
     constructor() {
-      this.getExtensionUrl = chrome.runtime.getURL;
       this.logger = new Logger("previewr");
       this.headerIconUrlBase = "https://www.google.com/s2/favicons?domain=";
       this.isVisible = false;
@@ -16163,11 +16162,6 @@ The transaction will not be sampled. Please use the ${configInstrumenter} instru
       this.floatie.startListening();
       this.previewr.init();
       this.iframeHelper.registerListeners();
-      chrome.runtime.onMessage.addListener((request, sender, callback) => {
-        console.debug("Re-posting message for DOM: ", request);
-        window.postMessage({ application: "better-previews", ...request });
-        callback("ok");
-      });
     }
     stop() {
       this.floatie.stopListening();
