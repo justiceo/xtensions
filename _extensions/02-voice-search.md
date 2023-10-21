@@ -8,7 +8,7 @@ chrome_id           : agmgoemhckhccgibmoigonndjhjllcoh
 website             : https://audate.app
 github_repo         : https://github.com/audateapp/voice-search
 feedback_url        : https://forms.gle/DuMbMQ76caFQee3z6
-logo_128            : /assets/imgs/voice-search-logo-128x128.png
+logo_128            : /assets/demos/audate/assets/images/logo-128x128.png
 
 # Preferably a GIF showing how the extension works.
 hero_image          : /assets/imgs/voice-search.jpeg
