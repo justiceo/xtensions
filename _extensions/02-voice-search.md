@@ -24,11 +24,11 @@ ratings             : 5.0
 active_users        : 11K+
 demo_content        : |
   <div style="display: flex; background: #eee; padding: 20px">
-    <iframe src="/assets/demos/audate/index.html#popup?demo=true" width="250" height="535" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden;"></iframe>
+    <iframe src="/assets/demos/audate/index.html#popup?demo=true" width="250" height="535" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden; background: white"></iframe>
     <div style="text-align: left; margin-left: 30px">
       <h3>Live demo</h3>
-      <p style="background-color: lightyellow; padding: 20px; border-radius: 8px; border: 1px solid #ddd">
-        Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs from a page context.
+      <p style="background-color: lightyellow; padding: 10px; border-radius: 8px; border: 1px solid #ddd">
+        Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.
         <br><br>Microphone permission is required for the demo, clicking the ⓞ button would trigger permission request.
       </p>
       

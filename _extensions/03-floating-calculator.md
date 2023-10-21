@@ -22,9 +22,8 @@ active_users        : 7K+
 demo_content        : | # Preferably a GIF showing how the extension works.
   <div style="background: #eee; padding: 20px">
     <h3>Live demo</h3>
-    <iframe src="/assets/demos/calculator/calc.html" width="600" height="400" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden;"></iframe>
-    <div style="text-align: left;">
-      
+    <iframe src="/assets/demos/calculator/calc.html" width="100%" height="400" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden; margin-bottom: 10px"></iframe>
+    <div style="text-align: left;">      
       <p style="background-color: lightyellow; padding: 20px; border-radius: 8px; border: 1px solid #ddd">
         Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.
       </p>
