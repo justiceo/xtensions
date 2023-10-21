@@ -10,9 +10,6 @@ github_repo         : https://github.com/essentialkit/link-previews
 feedback_url        : https://forms.gle/DtfV94iG4oqXQFFo9
 logo_128            : /assets/imgs/search-preview-logo-128x128.png
 
-# Preferably a GIF showing how the extension works.
-hero_image          : /assets/imgs/search-preview-too-many-tabs.webp
-
 # These would be displayed in a carousel and should showcase the different UIs of the extension.
 screenshots:
   - /assets/imgs/search-preview-screenshot1.jpeg
@@ -22,6 +19,9 @@ show_on_homepage    : true
 content_class       : search-preview
 ratings             : 4.88
 active_users        : 1K+
+demo_content        : | # Preferably a GIF showing how the extension works.
+  <img src="/assets/imgs/search-preview-too-many-tabs.webp" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image"
+              width="700" height="500" loading="lazy"> 
 
 # For icons, see https://fonts.google.com/icons
 features            :

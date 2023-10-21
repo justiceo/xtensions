@@ -10,9 +10,6 @@ github_repo         : https://github.com/essentialkit/floating-calculator
 feedback_url        : https://forms.gle/GYbKGS8Wy1mbgEiU6
 logo_128            : /assets/imgs/calculator-logo-128x128.png
 
-# Preferably a GIF showing how the extension works.
-hero_image          : /assets/imgs/calculator-hero.jpeg
-
 # These would be displayed in a carousel and should showcase the different UIs of the extension.
 screenshots:
   - /assets/imgs/calculator-screenshot1.png
@@ -22,6 +19,9 @@ show_on_homepage    : true
 content_class       : calculator
 ratings             : 4.9
 active_users        : 7K+
+demo_content        : | # Preferably a GIF showing how the extension works.
+  <img src="/assets/imgs/calculator-hero.jpeg" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image"
+              width="700" height="500" loading="lazy"> 
 
 # For icons, see https://fonts.google.com/icons
 features            :

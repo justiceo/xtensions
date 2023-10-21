@@ -3,24 +3,19 @@ layout: base
 ---
 <article class="post">
   <div class="post-content">
-    <div class="text-center border-bottom mb-5">
+    <div class="text-center mb-5">
       <img src="{{ page.logo_128 }}" class="rounded-3 mb-4" width="60" height="60" alt="logo" loading="lazy">
       <h1 class="fw-bold text-body-emphasis post-title">{{ page.title | escape }}</h1>
       <div class="col-md-8 mx-auto">
         <p class="mb-4">{{ page.description }}</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
           <a role="button" class="btn btn-outline-primary me-sm-3"
-            href="https://chrome.google.com/webstore/detail/{{ page.chrome_id }}?ref=essentialkit_detail">Add to
+            href="https://chrome.google.com/webstore/detail/{{ page.chrome_id }}?ref=essentialkit_detail"><img width="17px" src="/assets/imgs/chrome_icon-128x128.png" /> Add to
             Chrome</a>
           <a role="button" class="btn btn-outline-secondary" href="{{ page.github_repo }}">View source</a>
         </div>
       </div>
-      <div class="overflow-hidden" style="max-height: 30vh;">
-        <div class="container px-5">
-          <img src="{{ page.hero_image }}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image"
-            width="700" height="500" loading="lazy">
-        </div>
-      </div>
+      <div class="demo-content">{{ page.demo_content }}</div>
     </div>
 
     {%- if page.features.size > 0 -%}

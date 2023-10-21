@@ -2,7 +2,7 @@
 layout              : extension
 permalink           : /voice-search
 title               : Voice Search
-description         : Voice Search enables you to search the web using your voice 🗣️, simply by clicking on the browser icon 🌐.
+description         : Voice Search enables you to search the web using your voice 🗣️, simply by clicking on the extension icon.
 created_date        : 2020-4-17
 chrome_id           : agmgoemhckhccgibmoigonndjhjllcoh
 website             : https://audate.app
@@ -22,6 +22,21 @@ show_on_homepage    : true
 content_class       : voice-search
 ratings             : 5.0
 active_users        : 11K+
+demo_content        : |
+  <div style="display: flex; background: #eee; padding: 20px">
+    <iframe src="/assets/demos/audate/index.html#popup?demo=true" width="250" height="535" style="border: 1px solid #aaa; border-radius: 8px; overflow: hidden;"></iframe>
+    <div style="text-align: left; margin-left: 30px">
+      <h3>Live demo</h3>
+      <p style="background-color: lightyellow; padding: 20px; border-radius: 8px; border: 1px solid #ddd">
+        Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs from a page context.
+        <br><br>Microphone permission is required for the demo, clicking the ⓞ button would trigger permission request.
+      </p>
+      
+      <p>The demo on the left can give you an idea of what to expect when you install the extension.</p>
+      <p>In actual use, this UI would open as a popup when the extension icon is clicked.</p>
+      <p>You can speak your search in any of the 300+ locales supported by the Chrome STT engine.</p>
+    </div>
+  </div>
 
 # For icons, see https://fonts.google.com/icons
 features            :
