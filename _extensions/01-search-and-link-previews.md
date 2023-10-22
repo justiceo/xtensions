@@ -37,10 +37,12 @@ demo_content        : |
   </div> 
 
   <script>
-    window.postMessage(
-      { application: "better-previews", action: "search", data: "Generative AI", mode: "demo" },
-      window.location.origin
-    );
+    window.addEventListener("load", (event) => {
+        window.postMessage(
+          { application: "better-previews", action: "search", data: "Generative AI", mode: "demo" },
+          window.location.origin
+        );
+    });
   </script>
 
 # For icons, see https://fonts.google.com/icons
