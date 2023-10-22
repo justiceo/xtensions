@@ -48,10 +48,6 @@ features            :
     description     : “Repetitive motions like typing… that you do over and over can bring about carpal tunnel syndome” - WebMd.
     icon_name       : weekend
 
-  - title           : Privacy friendly
-    description     : All speech-recognition happens in your browser, we do not store or transfer any audio.
-    icon_name       : lock
-
   - title           : Natural & Expressive
     description     : Voice queries are longer and return more featured snippets than typed queries - Google Search.
     icon_name       : child_care
@@ -59,10 +55,6 @@ features            :
   - title           : Highly accessible
     description     : Using a keyboard with an unfamiliar layout/type? Not literate in English? Get onboard! 
     icon_name       : accessibility_new
-  
-  - title           : Open source
-    description     : The source code is available on Github - https://github.com/AudateApp/voice-search-extension. No ads, no sign-ups, no bs.
-    icon_name       : redeem
 
   - title           : Popular search engines
     description     : You can choose from Google to Bing, Baidu, Yandex, Yahoo, DuckDuckGo and Ecosia.

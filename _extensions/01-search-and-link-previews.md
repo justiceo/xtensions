@@ -59,18 +59,10 @@ features            :
     description     : Beyond search, the extension provides quick actions like "copy" and "email" based on the selection context
     icon_name       : apps
 
-  - title           : Privacy friendly
-    description     : We do not store or transfer your search or browsing history. What happens in your browser stays in your browser.
-    icon_name       : lock
-
   - title           : Highly accessible
     description     : The preview pane can be dragged, resized, minimized, expanded into a full tab and a whole lot more. 
     icon_name       : accessibility_new
   
-  - title           : Open source
-    description     : The source code is freely available on Github, with how-to-use instructions. No ads, no sign-ups, no bs.
-    icon_name       : redeem
-
   - title           : Popular search engines
     description     : You can choose from Google to Bing, Baidu, Yandex, Yahoo, DuckDuckGo and Ecosia.
     icon_name       : mode_heat
