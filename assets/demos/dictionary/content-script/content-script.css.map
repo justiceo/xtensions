@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/content-script/previewr.css"],
+  "sourcesContent": [".winbox {\n  border-radius: 10px;\n  overflow: hidden;\n}\n\n.nav-away {\n  background-size: 15px auto;\n  filter: invert(1);\n}\n\n.nav-back,\n.open-options {\n  background-size: 20px auto;\n  filter: invert(1);\n}\n\n.loading {\n  height: 100%;\n  display: flex;\n  align-items: center;\n  display: none;\n  position: relative;\n  background: white;\n  top: 0;\n}\n\n.bar-animation {\n  width: 50%;\n  top: 50%;\n  height: 3px;\n  background: #0055d5;\n  position: absolute;\n  transition: 1s all ease-out;\n  animation-name: loading-interminate;\n  animation-duration: 2s;\n  animation-iteration-count: infinite;\n}\n\n@keyframes loading-interminate {\n  0% {\n    left: 0;\n    width: 0;\n  }\n\n  50% {\n    left: 10%;\n  }\n\n  70% {\n    left: 60%;\n  }\n\n  100% {\n    left: 100%;\n    right: 0;\n  }\n}"],
+  "mappings": ";AAAA;AACE;AACA;AAAA;AAGF;AACE;AACA;AAAA;AAGF;AAAA;AAEE;AACA;AAAA;AAGF;AACE;AACA;AACA;AACA;AACA;AACA;AACA;AAAA;AAGF;AACE;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AAAA;AAGF;AAAA;AAEI;AACA;AAAA;AAAA;AAIA;AAAA;AAAA;AAIA;AAAA;AAAA;AAIA;AACA;AAAA;AAAA;",
+  "names": []
+}

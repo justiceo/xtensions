@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/popup/popup.ts"],
+  "sourcesContent": ["import './popup.css';\n\n// Submit definition request on button click.\ndocument.querySelector(\"button\")?.addEventListener(\"click\", (e) => {\n  maybeSendDefinition();\n});\n\n// Submit definition request on [enter] \ndocument.querySelector('input')?.addEventListener('keypress',  (e) => {\n  if (e.key === 'Enter') {\n    maybeSendDefinition();\n  }\n});\n\nfunction maybeSendDefinition() {\n  const text = document.querySelector(\"input\")?.value;\n  if(!text) {\n    return;\n  }\n\n  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {\n    if (tabs.length == 0) {\n      console.error('Unexpected state: No active tab');\n      return;\n    }\n    chrome.tabs.sendMessage(tabs[0].id!, {action: \"verbose-define\", data: text}, (response) => {\n      console.log(response);\n      window.close();\n    });\n  });\n}\n"],
+  "mappings": ";;;AAGA,WAAS,cAAc,QAAQ,GAAG,iBAAiB,SAAS,CAAC,MAAM;AACjE,wBAAoB;AAAA,EACtB,CAAC;AAGD,WAAS,cAAc,OAAO,GAAG,iBAAiB,YAAa,CAAC,MAAM;AACpE,QAAI,EAAE,QAAQ,SAAS;AACrB,0BAAoB;AAAA,IACtB;AAAA,EACF,CAAC;AAED,WAAS,sBAAsB;AAC7B,UAAM,OAAO,SAAS,cAAc,OAAO,GAAG;AAC9C,QAAG,CAAC,MAAM;AACR;AAAA,IACF;AAEA,WAAO,KAAK,MAAM,EAAE,QAAQ,MAAM,eAAe,KAAK,GAAG,CAAC,SAAS;AACjE,UAAI,KAAK,UAAU,GAAG;AACpB,gBAAQ,MAAM,iCAAiC;AAC/C;AAAA,MACF;AACA,aAAO,KAAK,YAAY,KAAK,GAAG,IAAK,EAAC,QAAQ,kBAAkB,MAAM,KAAI,GAAG,CAAC,aAAa;AACzF,gBAAQ,IAAI,QAAQ;AACpB,eAAO,MAAM;AAAA,MACf,CAAC;AAAA,IACH,CAAC;AAAA,EACH;",
+  "names": []
+}
