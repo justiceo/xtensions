@@ -5,6 +5,7 @@ layout              : extension
 permalink           : /write-better
 chrome_id           : nnnnnpmcdcloafmfkiihafnjidjkfmek
 website             : https://github.com/WritingAid/write-better
+published           : false
 ---
 
 An English language grammar tool for Google docs that improves the quality of technical writings.
