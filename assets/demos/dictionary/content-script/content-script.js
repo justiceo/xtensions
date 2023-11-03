@@ -157,12 +157,6 @@ var IS_DEV_BUILD=true;
       return "";
     }
   }
-  function getDomElement(selector) {
-    if (WINDOW.document && WINDOW.document.querySelector) {
-      return WINDOW.document.querySelector(selector);
-    }
-    return null;
-  }
 
   // node_modules/@sentry/utils/esm/error.js
   var SentryError = class extends Error {
@@ -1108,19 +1102,6 @@ Error:`,
   function dynamicRequire(mod, request) {
     return mod.require(request);
   }
-  function loadModule(moduleName) {
-    let mod;
-    try {
-      mod = dynamicRequire(module, moduleName);
-    } catch (e2) {
-    }
-    try {
-      const { cwd } = dynamicRequire(module, "process");
-      mod = dynamicRequire(module, `${cwd()}/node_modules/${moduleName}`);
-    } catch (e2) {
-    }
-    return mod;
-  }
 
   // node_modules/@sentry/utils/esm/normalize.js
   function normalize(input, depth = Infinity, maxProperties = Infinity) {
@@ -1463,13 +1444,13 @@ Error:`,
     nowSeconds: () => Date.now() / 1e3
   };
   function getBrowserPerformance() {
-    const { performance: performance2 } = WINDOW4;
-    if (!performance2 || !performance2.now) {
+    const { performance } = WINDOW4;
+    if (!performance || !performance.now) {
       return void 0;
     }
-    const timeOrigin = Date.now() - performance2.now();
+    const timeOrigin = Date.now() - performance.now();
     return {
-      now: () => performance2.now(),
+      now: () => performance.now(),
       timeOrigin
     };
   }
@@ -1487,27 +1468,26 @@ Error:`,
   };
   var dateTimestampInSeconds = dateTimestampSource.nowSeconds.bind(dateTimestampSource);
   var timestampInSeconds = timestampSource.nowSeconds.bind(timestampSource);
-  var timestampWithMs = timestampInSeconds;
   var _browserPerformanceTimeOriginMode;
   var browserPerformanceTimeOrigin = (() => {
-    const { performance: performance2 } = WINDOW4;
-    if (!performance2 || !performance2.now) {
+    const { performance } = WINDOW4;
+    if (!performance || !performance.now) {
       _browserPerformanceTimeOriginMode = "none";
       return void 0;
     }
     const threshold = 3600 * 1e3;
-    const performanceNow = performance2.now();
+    const performanceNow = performance.now();
     const dateNow = Date.now();
-    const timeOriginDelta = performance2.timeOrigin ? Math.abs(performance2.timeOrigin + performanceNow - dateNow) : threshold;
+    const timeOriginDelta = performance.timeOrigin ? Math.abs(performance.timeOrigin + performanceNow - dateNow) : threshold;
     const timeOriginIsReliable = timeOriginDelta < threshold;
-    const navigationStart = performance2.timing && performance2.timing.navigationStart;
+    const navigationStart = performance.timing && performance.timing.navigationStart;
     const hasNavigationStart = typeof navigationStart === "number";
     const navigationStartDelta = hasNavigationStart ? Math.abs(navigationStart + performanceNow - dateNow) : threshold;
     const navigationStartIsReliable = navigationStartDelta < threshold;
     if (timeOriginIsReliable || navigationStartIsReliable) {
       if (timeOriginDelta <= navigationStartDelta) {
         _browserPerformanceTimeOriginMode = "timeOrigin";
-        return performance2.timeOrigin;
+        return performance.timeOrigin;
       } else {
         _browserPerformanceTimeOriginMode = "navigationStart";
         return navigationStart;
@@ -1516,28 +1496,6 @@ Error:`,
     _browserPerformanceTimeOriginMode = "dateNow";
     return dateNow;
   })();
-
-  // node_modules/@sentry/utils/esm/tracing.js
-  var TRACEPARENT_REGEXP = new RegExp(
-    "^[ \\t]*([0-9a-f]{32})?-?([0-9a-f]{16})?-?([01])?[ \\t]*$"
-  );
-  function extractTraceparentData(traceparent) {
-    const matches = traceparent.match(TRACEPARENT_REGEXP);
-    if (!traceparent || !matches) {
-      return void 0;
-    }
-    let parentSampled;
-    if (matches[3] === "1") {
-      parentSampled = true;
-    } else if (matches[3] === "0") {
-      parentSampled = false;
-    }
-    return {
-      traceId: matches[1],
-      parentSampled,
-      parentSpanId: matches[2]
-    };
-  }
 
   // node_modules/@sentry/utils/esm/envelope.js
   function createEnvelope(headers, items = []) {
@@ -1701,79 +1659,6 @@ ${JSON.stringify(itemHeaders)}
       updatedRateLimits.all = now + 60 * 1e3;
     }
     return updatedRateLimits;
-  }
-
-  // node_modules/@sentry/utils/esm/baggage.js
-  var BAGGAGE_HEADER_NAME = "baggage";
-  var SENTRY_BAGGAGE_KEY_PREFIX = "sentry-";
-  var SENTRY_BAGGAGE_KEY_PREFIX_REGEX = /^sentry-/;
-  var MAX_BAGGAGE_STRING_LENGTH = 8192;
-  function baggageHeaderToDynamicSamplingContext(baggageHeader) {
-    if (!isString(baggageHeader) && !Array.isArray(baggageHeader)) {
-      return void 0;
-    }
-    let baggageObject = {};
-    if (Array.isArray(baggageHeader)) {
-      baggageObject = baggageHeader.reduce((acc, curr) => {
-        const currBaggageObject = baggageHeaderToObject(curr);
-        return {
-          ...acc,
-          ...currBaggageObject
-        };
-      }, {});
-    } else {
-      if (!baggageHeader) {
-        return void 0;
-      }
-      baggageObject = baggageHeaderToObject(baggageHeader);
-    }
-    const dynamicSamplingContext = Object.entries(baggageObject).reduce((acc, [key, value]) => {
-      if (key.match(SENTRY_BAGGAGE_KEY_PREFIX_REGEX)) {
-        const nonPrefixedKey = key.slice(SENTRY_BAGGAGE_KEY_PREFIX.length);
-        acc[nonPrefixedKey] = value;
-      }
-      return acc;
-    }, {});
-    if (Object.keys(dynamicSamplingContext).length > 0) {
-      return dynamicSamplingContext;
-    } else {
-      return void 0;
-    }
-  }
-  function dynamicSamplingContextToSentryBaggageHeader(dynamicSamplingContext) {
-    const sentryPrefixedDSC = Object.entries(dynamicSamplingContext).reduce(
-      (acc, [dscKey, dscValue]) => {
-        if (dscValue) {
-          acc[`${SENTRY_BAGGAGE_KEY_PREFIX}${dscKey}`] = dscValue;
-        }
-        return acc;
-      },
-      {}
-    );
-    return objectToBaggageHeader(sentryPrefixedDSC);
-  }
-  function baggageHeaderToObject(baggageHeader) {
-    return baggageHeader.split(",").map((baggageEntry) => baggageEntry.split("=").map((keyOrValue) => decodeURIComponent(keyOrValue.trim()))).reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {});
-  }
-  function objectToBaggageHeader(object) {
-    if (Object.keys(object).length === 0) {
-      return void 0;
-    }
-    return Object.entries(object).reduce((baggageHeader, [objectKey, objectValue], currentIndex) => {
-      const baggageEntry = `${encodeURIComponent(objectKey)}=${encodeURIComponent(objectValue)}`;
-      const newBaggageHeader = currentIndex === 0 ? baggageEntry : `${baggageHeader},${baggageEntry}`;
-      if (newBaggageHeader.length > MAX_BAGGAGE_STRING_LENGTH) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn(
-          `Not adding key: ${objectKey} with val: ${objectValue} to baggage header due to exceeding baggage size limits.`
-        );
-        return baggageHeader;
-      } else {
-        return newBaggageHeader;
-      }
-    }, "");
   }
 
   // node_modules/@sentry/core/esm/session.js
@@ -4653,1756 +4538,129 @@ Url: ${_getEventFilterUrl(event)}`
     ...integrations_exports2
   };
 
-  // node_modules/@sentry/tracing/esm/utils.js
-  function hasTracingEnabled(maybeOptions) {
-    const client = getCurrentHub().getClient();
-    const options = maybeOptions || client && client.getOptions();
-    return !!options && ("tracesSampleRate" in options || "tracesSampler" in options);
-  }
-  function getActiveTransaction(maybeHub) {
-    const hub = maybeHub || getCurrentHub();
-    const scope = hub.getScope();
-    return scope && scope.getTransaction();
-  }
-  function msToSec(time) {
-    return time / 1e3;
-  }
-
-  // node_modules/@sentry/tracing/esm/errors.js
-  function registerErrorInstrumentation() {
-    addInstrumentationHandler("error", errorCallback);
-    addInstrumentationHandler("unhandledrejection", errorCallback);
-  }
-  function errorCallback() {
-    const activeTransaction = getActiveTransaction();
-    if (activeTransaction) {
-      const status = "internal_error";
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] Transaction: ${status} -> Global error occured`);
-      activeTransaction.setStatus(status);
-    }
-  }
-
-  // node_modules/@sentry/tracing/esm/span.js
-  var SpanRecorder = class {
-    __init() {
-      this.spans = [];
-    }
-    constructor(maxlen = 1e3) {
-      SpanRecorder.prototype.__init.call(this);
-      this._maxlen = maxlen;
-    }
-    add(span) {
-      if (this.spans.length > this._maxlen) {
-        span.spanRecorder = void 0;
-      } else {
-        this.spans.push(span);
-      }
-    }
-  };
-  var Span = class {
-    __init2() {
-      this.traceId = uuid4();
-    }
-    __init3() {
-      this.spanId = uuid4().substring(16);
-    }
-    __init4() {
-      this.startTimestamp = timestampWithMs();
-    }
-    __init5() {
-      this.tags = {};
-    }
-    __init6() {
-      this.data = {};
-    }
-    __init7() {
-      this.instrumenter = "sentry";
-    }
-    constructor(spanContext) {
-      Span.prototype.__init2.call(this);
-      Span.prototype.__init3.call(this);
-      Span.prototype.__init4.call(this);
-      Span.prototype.__init5.call(this);
-      Span.prototype.__init6.call(this);
-      Span.prototype.__init7.call(this);
-      if (!spanContext) {
-        return this;
-      }
-      if (spanContext.traceId) {
-        this.traceId = spanContext.traceId;
-      }
-      if (spanContext.spanId) {
-        this.spanId = spanContext.spanId;
-      }
-      if (spanContext.parentSpanId) {
-        this.parentSpanId = spanContext.parentSpanId;
-      }
-      if ("sampled" in spanContext) {
-        this.sampled = spanContext.sampled;
-      }
-      if (spanContext.op) {
-        this.op = spanContext.op;
-      }
-      if (spanContext.description) {
-        this.description = spanContext.description;
-      }
-      if (spanContext.data) {
-        this.data = spanContext.data;
-      }
-      if (spanContext.tags) {
-        this.tags = spanContext.tags;
-      }
-      if (spanContext.status) {
-        this.status = spanContext.status;
-      }
-      if (spanContext.startTimestamp) {
-        this.startTimestamp = spanContext.startTimestamp;
-      }
-      if (spanContext.endTimestamp) {
-        this.endTimestamp = spanContext.endTimestamp;
-      }
-      if (spanContext.instrumenter) {
-        this.instrumenter = spanContext.instrumenter;
-      }
-    }
-    startChild(spanContext) {
-      const childSpan = new Span({
-        ...spanContext,
-        parentSpanId: this.spanId,
-        sampled: this.sampled,
-        traceId: this.traceId
-      });
-      childSpan.spanRecorder = this.spanRecorder;
-      if (childSpan.spanRecorder) {
-        childSpan.spanRecorder.add(childSpan);
-      }
-      childSpan.transaction = this.transaction;
-      if ((typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && childSpan.transaction) {
-        const opStr = spanContext && spanContext.op || "< unknown op >";
-        const nameStr = childSpan.transaction.name || "< unknown name >";
-        const idStr = childSpan.transaction.spanId;
-        const logMessage = `[Tracing] Starting '${opStr}' span on transaction '${nameStr}' (${idStr}).`;
-        childSpan.transaction.metadata.spanMetadata[childSpan.spanId] = { logMessage };
-        logger.log(logMessage);
-      }
-      return childSpan;
-    }
-    setTag(key, value) {
-      this.tags = { ...this.tags, [key]: value };
-      return this;
-    }
-    setData(key, value) {
-      this.data = { ...this.data, [key]: value };
-      return this;
-    }
-    setStatus(value) {
-      this.status = value;
-      return this;
-    }
-    setHttpStatus(httpStatus) {
-      this.setTag("http.status_code", String(httpStatus));
-      const spanStatus = spanStatusfromHttpCode(httpStatus);
-      if (spanStatus !== "unknown_error") {
-        this.setStatus(spanStatus);
-      }
-      return this;
-    }
-    isSuccess() {
-      return this.status === "ok";
-    }
-    finish(endTimestamp) {
-      if ((typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && this.transaction && this.transaction.spanId !== this.spanId) {
-        const { logMessage } = this.transaction.metadata.spanMetadata[this.spanId];
-        if (logMessage) {
-          logger.log(logMessage.replace("Starting", "Finishing"));
+  // src/manifest.json
+  var manifest_default = {
+    name: "__MSG_appName__",
+    description: "__MSG_appDesc__",
+    short_name: "__MSG_appShortName_",
+    homepage_url: "https://chrome.google.com/webstore/detail/dictionary/nhbchcfeodkcblfpdjdhelcfbefefmag",
+    __package_name__: "dictionary",
+    "__comment:version__": "Firefox does not support leading zeros in versions",
+    version: "23.5.19",
+    __sentry_dsn__: "https://b1d81a9e5f1546f79885a473ce33128c@o526305.ingest.sentry.io/6244539",
+    manifest_version: 3,
+    default_locale: "en",
+    author: "Justice Ogbonna",
+    permissions: ["declarativeNetRequest", "contextMenus", "storage", "cookies"],
+    declarative_net_request: {
+      rule_resources: [
+        {
+          id: "ruleset_1",
+          enabled: true,
+          path: "assets/rules.json"
         }
-      }
-      this.endTimestamp = typeof endTimestamp === "number" ? endTimestamp : timestampWithMs();
-    }
-    toTraceparent() {
-      let sampledString = "";
-      if (this.sampled !== void 0) {
-        sampledString = this.sampled ? "-1" : "-0";
-      }
-      return `${this.traceId}-${this.spanId}${sampledString}`;
-    }
-    toContext() {
-      return dropUndefinedKeys({
-        data: this.data,
-        description: this.description,
-        endTimestamp: this.endTimestamp,
-        op: this.op,
-        parentSpanId: this.parentSpanId,
-        sampled: this.sampled,
-        spanId: this.spanId,
-        startTimestamp: this.startTimestamp,
-        status: this.status,
-        tags: this.tags,
-        traceId: this.traceId
-      });
-    }
-    updateWithContext(spanContext) {
-      this.data = spanContext.data || {};
-      this.description = spanContext.description;
-      this.endTimestamp = spanContext.endTimestamp;
-      this.op = spanContext.op;
-      this.parentSpanId = spanContext.parentSpanId;
-      this.sampled = spanContext.sampled;
-      this.spanId = spanContext.spanId || this.spanId;
-      this.startTimestamp = spanContext.startTimestamp || this.startTimestamp;
-      this.status = spanContext.status;
-      this.tags = spanContext.tags || {};
-      this.traceId = spanContext.traceId || this.traceId;
-      return this;
-    }
-    getTraceContext() {
-      return dropUndefinedKeys({
-        data: Object.keys(this.data).length > 0 ? this.data : void 0,
-        description: this.description,
-        op: this.op,
-        parent_span_id: this.parentSpanId,
-        span_id: this.spanId,
-        status: this.status,
-        tags: Object.keys(this.tags).length > 0 ? this.tags : void 0,
-        trace_id: this.traceId
-      });
-    }
-    toJSON() {
-      return dropUndefinedKeys({
-        data: Object.keys(this.data).length > 0 ? this.data : void 0,
-        description: this.description,
-        op: this.op,
-        parent_span_id: this.parentSpanId,
-        span_id: this.spanId,
-        start_timestamp: this.startTimestamp,
-        status: this.status,
-        tags: Object.keys(this.tags).length > 0 ? this.tags : void 0,
-        timestamp: this.endTimestamp,
-        trace_id: this.traceId
-      });
-    }
-  };
-  function spanStatusfromHttpCode(httpStatus) {
-    if (httpStatus < 400 && httpStatus >= 100) {
-      return "ok";
-    }
-    if (httpStatus >= 400 && httpStatus < 500) {
-      switch (httpStatus) {
-        case 401:
-          return "unauthenticated";
-        case 403:
-          return "permission_denied";
-        case 404:
-          return "not_found";
-        case 409:
-          return "already_exists";
-        case 413:
-          return "failed_precondition";
-        case 429:
-          return "resource_exhausted";
-        default:
-          return "invalid_argument";
-      }
-    }
-    if (httpStatus >= 500 && httpStatus < 600) {
-      switch (httpStatus) {
-        case 501:
-          return "unimplemented";
-        case 503:
-          return "unavailable";
-        case 504:
-          return "deadline_exceeded";
-        default:
-          return "internal_error";
-      }
-    }
-    return "unknown_error";
-  }
-
-  // node_modules/@sentry/tracing/esm/transaction.js
-  var Transaction = class extends Span {
-    __init() {
-      this._measurements = {};
-    }
-    __init2() {
-      this._contexts = {};
-    }
-    __init3() {
-      this._frozenDynamicSamplingContext = void 0;
-    }
-    constructor(transactionContext, hub) {
-      super(transactionContext);
-      Transaction.prototype.__init.call(this);
-      Transaction.prototype.__init2.call(this);
-      Transaction.prototype.__init3.call(this);
-      this._hub = hub || getCurrentHub();
-      this._name = transactionContext.name || "";
-      this.metadata = {
-        source: "custom",
-        ...transactionContext.metadata,
-        spanMetadata: {}
-      };
-      this._trimEnd = transactionContext.trimEnd;
-      this.transaction = this;
-      const incomingDynamicSamplingContext = this.metadata.dynamicSamplingContext;
-      if (incomingDynamicSamplingContext) {
-        this._frozenDynamicSamplingContext = { ...incomingDynamicSamplingContext };
-      }
-    }
-    get name() {
-      return this._name;
-    }
-    set name(newName) {
-      this.setName(newName);
-    }
-    setName(name, source = "custom") {
-      this._name = name;
-      this.metadata.source = source;
-    }
-    initSpanRecorder(maxlen = 1e3) {
-      if (!this.spanRecorder) {
-        this.spanRecorder = new SpanRecorder(maxlen);
-      }
-      this.spanRecorder.add(this);
-    }
-    setContext(key, context) {
-      if (context === null) {
-        delete this._contexts[key];
-      } else {
-        this._contexts[key] = context;
-      }
-    }
-    setMeasurement(name, value, unit = "") {
-      this._measurements[name] = { value, unit };
-    }
-    setMetadata(newMetadata) {
-      this.metadata = { ...this.metadata, ...newMetadata };
-    }
-    finish(endTimestamp) {
-      if (this.endTimestamp !== void 0) {
-        return void 0;
-      }
-      if (!this.name) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn("Transaction has no name, falling back to `<unlabeled transaction>`.");
-        this.name = "<unlabeled transaction>";
-      }
-      super.finish(endTimestamp);
-      if (this.sampled !== true) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] Discarding transaction because its trace was not chosen to be sampled.");
-        const client = this._hub.getClient();
-        if (client) {
-          client.recordDroppedEvent("sample_rate", "transaction");
-        }
-        return void 0;
-      }
-      const finishedSpans = this.spanRecorder ? this.spanRecorder.spans.filter((s3) => s3 !== this && s3.endTimestamp) : [];
-      if (this._trimEnd && finishedSpans.length > 0) {
-        this.endTimestamp = finishedSpans.reduce((prev, current) => {
-          if (prev.endTimestamp && current.endTimestamp) {
-            return prev.endTimestamp > current.endTimestamp ? prev : current;
-          }
-          return prev;
-        }).endTimestamp;
-      }
-      const metadata = this.metadata;
-      const transaction = {
-        contexts: {
-          ...this._contexts,
-          trace: this.getTraceContext()
-        },
-        spans: finishedSpans,
-        start_timestamp: this.startTimestamp,
-        tags: this.tags,
-        timestamp: this.endTimestamp,
-        transaction: this.name,
-        type: "transaction",
-        sdkProcessingMetadata: {
-          ...metadata,
-          dynamicSamplingContext: this.getDynamicSamplingContext()
-        },
-        ...metadata.source && {
-          transaction_info: {
-            source: metadata.source
-          }
-        }
-      };
-      const hasMeasurements = Object.keys(this._measurements).length > 0;
-      if (hasMeasurements) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(
-          "[Measurements] Adding measurements to transaction",
-          JSON.stringify(this._measurements, void 0, 2)
-        );
-        transaction.measurements = this._measurements;
-      }
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] Finishing ${this.op} transaction: ${this.name}.`);
-      return this._hub.captureEvent(transaction);
-    }
-    toContext() {
-      const spanContext = super.toContext();
-      return dropUndefinedKeys({
-        ...spanContext,
-        name: this.name,
-        trimEnd: this._trimEnd
-      });
-    }
-    updateWithContext(transactionContext) {
-      super.updateWithContext(transactionContext);
-      this.name = transactionContext.name || "";
-      this._trimEnd = transactionContext.trimEnd;
-      return this;
-    }
-    getDynamicSamplingContext() {
-      if (this._frozenDynamicSamplingContext) {
-        return this._frozenDynamicSamplingContext;
-      }
-      const hub = this._hub || getCurrentHub();
-      const client = hub && hub.getClient();
-      if (!client)
-        return {};
-      const { environment, release } = client.getOptions() || {};
-      const { publicKey: public_key } = client.getDsn() || {};
-      const maybeSampleRate = this.metadata.sampleRate;
-      const sample_rate = maybeSampleRate !== void 0 ? maybeSampleRate.toString() : void 0;
-      const scope = hub.getScope();
-      const { segment: user_segment } = scope && scope.getUser() || {};
-      const source = this.metadata.source;
-      const transaction = source && source !== "url" ? this.name : void 0;
-      const dsc = dropUndefinedKeys({
-        environment,
-        release,
-        transaction,
-        user_segment,
-        public_key,
-        trace_id: this.traceId,
-        sample_rate
-      });
-      return dsc;
-    }
-  };
-
-  // node_modules/@sentry/tracing/esm/idletransaction.js
-  var DEFAULT_IDLE_TIMEOUT = 1e3;
-  var DEFAULT_FINAL_TIMEOUT = 3e4;
-  var DEFAULT_HEARTBEAT_INTERVAL = 5e3;
-  var IdleTransactionSpanRecorder = class extends SpanRecorder {
-    constructor(_pushActivity, _popActivity, transactionSpanId, maxlen) {
-      super(maxlen);
-      this._pushActivity = _pushActivity;
-      this._popActivity = _popActivity;
-      this.transactionSpanId = transactionSpanId;
-    }
-    add(span) {
-      if (span.spanId !== this.transactionSpanId) {
-        span.finish = (endTimestamp) => {
-          span.endTimestamp = typeof endTimestamp === "number" ? endTimestamp : timestampWithMs();
-          this._popActivity(span.spanId);
-        };
-        if (span.endTimestamp === void 0) {
-          this._pushActivity(span.spanId);
-        }
-      }
-      super.add(span);
-    }
-  };
-  var IdleTransaction = class extends Transaction {
-    __init() {
-      this.activities = {};
-    }
-    __init2() {
-      this._heartbeatCounter = 0;
-    }
-    __init3() {
-      this._finished = false;
-    }
-    __init4() {
-      this._beforeFinishCallbacks = [];
-    }
-    constructor(transactionContext, _idleHub, _idleTimeout = DEFAULT_IDLE_TIMEOUT, _finalTimeout = DEFAULT_FINAL_TIMEOUT, _heartbeatInterval = DEFAULT_HEARTBEAT_INTERVAL, _onScope = false) {
-      super(transactionContext, _idleHub);
-      this._idleHub = _idleHub;
-      this._idleTimeout = _idleTimeout;
-      this._finalTimeout = _finalTimeout;
-      this._heartbeatInterval = _heartbeatInterval;
-      this._onScope = _onScope;
-      IdleTransaction.prototype.__init.call(this);
-      IdleTransaction.prototype.__init2.call(this);
-      IdleTransaction.prototype.__init3.call(this);
-      IdleTransaction.prototype.__init4.call(this);
-      if (_onScope) {
-        clearActiveTransaction(_idleHub);
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`Setting idle transaction on scope. Span ID: ${this.spanId}`);
-        _idleHub.configureScope((scope) => scope.setSpan(this));
-      }
-      this._startIdleTimeout();
-      setTimeout(() => {
-        if (!this._finished) {
-          this.setStatus("deadline_exceeded");
-          this.finish();
-        }
-      }, this._finalTimeout);
-    }
-    finish(endTimestamp = timestampWithMs()) {
-      this._finished = true;
-      this.activities = {};
-      if (this.spanRecorder) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] finishing IdleTransaction", new Date(endTimestamp * 1e3).toISOString(), this.op);
-        for (const callback of this._beforeFinishCallbacks) {
-          callback(this, endTimestamp);
-        }
-        this.spanRecorder.spans = this.spanRecorder.spans.filter((span) => {
-          if (span.spanId === this.spanId) {
-            return true;
-          }
-          if (!span.endTimestamp) {
-            span.endTimestamp = endTimestamp;
-            span.setStatus("cancelled");
-            (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] cancelling span since transaction ended early", JSON.stringify(span, void 0, 2));
-          }
-          const keepSpan = span.startTimestamp < endTimestamp;
-          if (!keepSpan) {
-            (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(
-              "[Tracing] discarding Span since it happened after Transaction was finished",
-              JSON.stringify(span, void 0, 2)
-            );
-          }
-          return keepSpan;
-        });
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] flushing IdleTransaction");
-      } else {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] No active IdleTransaction");
-      }
-      if (this._onScope) {
-        clearActiveTransaction(this._idleHub);
-      }
-      return super.finish(endTimestamp);
-    }
-    registerBeforeFinishCallback(callback) {
-      this._beforeFinishCallbacks.push(callback);
-    }
-    initSpanRecorder(maxlen) {
-      if (!this.spanRecorder) {
-        const pushActivity = (id) => {
-          if (this._finished) {
-            return;
-          }
-          this._pushActivity(id);
-        };
-        const popActivity = (id) => {
-          if (this._finished) {
-            return;
-          }
-          this._popActivity(id);
-        };
-        this.spanRecorder = new IdleTransactionSpanRecorder(pushActivity, popActivity, this.spanId, maxlen);
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("Starting heartbeat");
-        this._pingHeartbeat();
-      }
-      this.spanRecorder.add(this);
-    }
-    _cancelIdleTimeout() {
-      if (this._idleTimeoutID) {
-        clearTimeout(this._idleTimeoutID);
-        this._idleTimeoutID = void 0;
-      }
-    }
-    _startIdleTimeout(endTimestamp) {
-      this._cancelIdleTimeout();
-      this._idleTimeoutID = setTimeout(() => {
-        if (!this._finished && Object.keys(this.activities).length === 0) {
-          this.finish(endTimestamp);
-        }
-      }, this._idleTimeout);
-    }
-    _pushActivity(spanId) {
-      this._cancelIdleTimeout();
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] pushActivity: ${spanId}`);
-      this.activities[spanId] = true;
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] new activities count", Object.keys(this.activities).length);
-    }
-    _popActivity(spanId) {
-      if (this.activities[spanId]) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] popActivity ${spanId}`);
-        delete this.activities[spanId];
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] new activities count", Object.keys(this.activities).length);
-      }
-      if (Object.keys(this.activities).length === 0) {
-        const endTimestamp = timestampWithMs() + this._idleTimeout / 1e3;
-        this._startIdleTimeout(endTimestamp);
-      }
-    }
-    _beat() {
-      if (this._finished) {
-        return;
-      }
-      const heartbeatString = Object.keys(this.activities).join("");
-      if (heartbeatString === this._prevHeartbeatString) {
-        this._heartbeatCounter++;
-      } else {
-        this._heartbeatCounter = 1;
-      }
-      this._prevHeartbeatString = heartbeatString;
-      if (this._heartbeatCounter >= 3) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] Transaction finished because of no change for 3 heart beats");
-        this.setStatus("deadline_exceeded");
-        this.finish();
-      } else {
-        this._pingHeartbeat();
-      }
-    }
-    _pingHeartbeat() {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`pinging Heartbeat -> current counter: ${this._heartbeatCounter}`);
-      setTimeout(() => {
-        this._beat();
-      }, this._heartbeatInterval);
-    }
-  };
-  function clearActiveTransaction(hub) {
-    const scope = hub.getScope();
-    if (scope) {
-      const transaction = scope.getTransaction();
-      if (transaction) {
-        scope.setSpan(void 0);
-      }
-    }
-  }
-
-  // node_modules/@sentry/tracing/esm/hubextensions.js
-  function traceHeaders() {
-    const scope = this.getScope();
-    if (scope) {
-      const span = scope.getSpan();
-      if (span) {
-        return {
-          "sentry-trace": span.toTraceparent()
-        };
-      }
-    }
-    return {};
-  }
-  function sample(transaction, options, samplingContext) {
-    if (!hasTracingEnabled(options)) {
-      transaction.sampled = false;
-      return transaction;
-    }
-    if (transaction.sampled !== void 0) {
-      transaction.setMetadata({
-        sampleRate: Number(transaction.sampled)
-      });
-      return transaction;
-    }
-    let sampleRate;
-    if (typeof options.tracesSampler === "function") {
-      sampleRate = options.tracesSampler(samplingContext);
-      transaction.setMetadata({
-        sampleRate: Number(sampleRate)
-      });
-    } else if (samplingContext.parentSampled !== void 0) {
-      sampleRate = samplingContext.parentSampled;
-    } else {
-      sampleRate = options.tracesSampleRate;
-      transaction.setMetadata({
-        sampleRate: Number(sampleRate)
-      });
-    }
-    if (!isValidSampleRate(sampleRate)) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn("[Tracing] Discarding transaction because of invalid sample rate.");
-      transaction.sampled = false;
-      return transaction;
-    }
-    if (!sampleRate) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(
-        `[Tracing] Discarding transaction because ${typeof options.tracesSampler === "function" ? "tracesSampler returned 0 or false" : "a negative sampling decision was inherited or tracesSampleRate is set to 0"}`
-      );
-      transaction.sampled = false;
-      return transaction;
-    }
-    transaction.sampled = Math.random() < sampleRate;
-    if (!transaction.sampled) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(
-        `[Tracing] Discarding transaction because it's not included in the random sample (sampling rate = ${Number(
-          sampleRate
-        )})`
-      );
-      return transaction;
-    }
-    (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] starting ${transaction.op} transaction - ${transaction.name}`);
-    return transaction;
-  }
-  function isValidSampleRate(rate) {
-    if (isNaN2(rate) || !(typeof rate === "number" || typeof rate === "boolean")) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn(
-        `[Tracing] Given sample rate is invalid. Sample rate must be a boolean or a number between 0 and 1. Got ${JSON.stringify(
-          rate
-        )} of type ${JSON.stringify(typeof rate)}.`
-      );
-      return false;
-    }
-    if (rate < 0 || rate > 1) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn(`[Tracing] Given sample rate is invalid. Sample rate must be between 0 and 1. Got ${rate}.`);
-      return false;
-    }
-    return true;
-  }
-  function _startTransaction(transactionContext, customSamplingContext) {
-    const client = this.getClient();
-    const options = client && client.getOptions() || {};
-    const configInstrumenter = options.instrumenter || "sentry";
-    const transactionInstrumenter = transactionContext.instrumenter || "sentry";
-    if (configInstrumenter !== transactionInstrumenter) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.error(
-        `A transaction was started with instrumenter=\`${transactionInstrumenter}\`, but the SDK is configured with the \`${configInstrumenter}\` instrumenter.
-The transaction will not be sampled. Please use the ${configInstrumenter} instrumentation to start transactions.`
-      );
-      transactionContext.sampled = false;
-    }
-    let transaction = new Transaction(transactionContext, this);
-    transaction = sample(transaction, options, {
-      parentSampled: transactionContext.parentSampled,
-      transactionContext,
-      ...customSamplingContext
-    });
-    if (transaction.sampled) {
-      transaction.initSpanRecorder(options._experiments && options._experiments.maxSpans);
-    }
-    return transaction;
-  }
-  function startIdleTransaction(hub, transactionContext, idleTimeout, finalTimeout, onScope, customSamplingContext, heartbeatInterval) {
-    const client = hub.getClient();
-    const options = client && client.getOptions() || {};
-    let transaction = new IdleTransaction(transactionContext, hub, idleTimeout, finalTimeout, heartbeatInterval, onScope);
-    transaction = sample(transaction, options, {
-      parentSampled: transactionContext.parentSampled,
-      transactionContext,
-      ...customSamplingContext
-    });
-    if (transaction.sampled) {
-      transaction.initSpanRecorder(options._experiments && options._experiments.maxSpans);
-    }
-    return transaction;
-  }
-  function _addTracingExtensions() {
-    const carrier = getMainCarrier();
-    if (!carrier.__SENTRY__) {
-      return;
-    }
-    carrier.__SENTRY__.extensions = carrier.__SENTRY__.extensions || {};
-    if (!carrier.__SENTRY__.extensions.startTransaction) {
-      carrier.__SENTRY__.extensions.startTransaction = _startTransaction;
-    }
-    if (!carrier.__SENTRY__.extensions.traceHeaders) {
-      carrier.__SENTRY__.extensions.traceHeaders = traceHeaders;
-    }
-  }
-  function _autoloadDatabaseIntegrations() {
-    const carrier = getMainCarrier();
-    if (!carrier.__SENTRY__) {
-      return;
-    }
-    const packageToIntegrationMapping = {
-      mongodb() {
-        const integration = dynamicRequire(module, "./integrations/node/mongo");
-        return new integration.Mongo();
+      ]
+    },
+    host_permissions: ["*://*/*"],
+    action: {
+      default_icon: {
+        "16": "assets/logo-16x16.png",
+        "24": "assets/logo-24x24.png",
+        "32": "assets/logo-32x32.png"
       },
-      mongoose() {
-        const integration = dynamicRequire(module, "./integrations/node/mongo");
-        return new integration.Mongo({ mongoose: true });
+      default_title: "__MSG_appName__",
+      default_popup: "popup/popup.html"
+    },
+    content_scripts: [{
+      matches: ["http://*/*", "https://*/*"],
+      all_frames: true,
+      js: ["content-script/content-script.js"],
+      css: ["content-script/content-script.css"],
+      run_at: "document_start"
+    }],
+    icons: {
+      "16": "assets/logo-16x16.png",
+      "32": "assets/logo-32x32.png",
+      "48": "assets/logo-48x48.png",
+      "128": "assets/logo-128x128.png"
+    },
+    web_accessible_resources: [
+      {
+        resources: ["assets/logo-24x24.png"],
+        matches: ["<all_urls>"]
       },
-      mysql() {
-        const integration = dynamicRequire(module, "./integrations/node/mysql");
-        return new integration.Mysql();
-      },
-      pg() {
-        const integration = dynamicRequire(module, "./integrations/node/postgres");
-        return new integration.Postgres();
+      {
+        resources: ["content-script/winbox.css"],
+        matches: ["<all_urls>"]
       }
-    };
-    const mappedPackages = Object.keys(packageToIntegrationMapping).filter((moduleName) => !!loadModule(moduleName)).map((pkg) => {
-      try {
-        return packageToIntegrationMapping[pkg]();
-      } catch (e2) {
-        return void 0;
+    ],
+    options_page: "options-page/options.html",
+    background: {
+      service_worker: "background-script/background.js",
+      __firefox__persistent: "false"
+    },
+    __firefox__key: "",
+    __firefox__browser_specific_settings: {
+      gecko: {
+        id: "no-reply@justiceo.com"
       }
-    }).filter((p3) => p3);
-    if (mappedPackages.length > 0) {
-      carrier.__SENTRY__.integrations = [...carrier.__SENTRY__.integrations || [], ...mappedPackages];
-    }
-  }
-  function addExtensionMethods() {
-    _addTracingExtensions();
-    if (isNodeEnv()) {
-      _autoloadDatabaseIntegrations();
-    }
-    registerErrorInstrumentation();
-  }
-
-  // node_modules/@sentry/tracing/esm/browser/types.js
-  var WINDOW6 = GLOBAL_OBJ;
-
-  // node_modules/@sentry/tracing/esm/browser/backgroundtab.js
-  function registerBackgroundTabDetection() {
-    if (WINDOW6 && WINDOW6.document) {
-      WINDOW6.document.addEventListener("visibilitychange", () => {
-        const activeTransaction = getActiveTransaction();
-        if (WINDOW6.document.hidden && activeTransaction) {
-          const statusType = "cancelled";
-          (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(
-            `[Tracing] Transaction: ${statusType} -> since tab moved to the background, op: ${activeTransaction.op}`
-          );
-          if (!activeTransaction.status) {
-            activeTransaction.setStatus(statusType);
-          }
-          activeTransaction.setTag("visibilitychange", "document.hidden");
-          activeTransaction.finish();
-        }
-      });
-    } else {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn("[Tracing] Could not set up background tab detection due to lack of global document");
-    }
-  }
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/bindReporter.js
-  var bindReporter = (callback, metric, reportAllChanges) => {
-    let prevValue;
-    let delta;
-    return (forceReport) => {
-      if (metric.value >= 0) {
-        if (forceReport || reportAllChanges) {
-          delta = metric.value - (prevValue || 0);
-          if (delta || prevValue === void 0) {
-            prevValue = metric.value;
-            metric.delta = delta;
-            callback(metric);
-          }
-        }
-      }
-    };
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/generateUniqueID.js
-  var generateUniqueID = () => {
-    return `v3-${Date.now()}-${Math.floor(Math.random() * (9e12 - 1)) + 1e12}`;
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/getNavigationEntry.js
-  var getNavigationEntryFromPerformanceTiming = () => {
-    const timing = WINDOW6.performance.timing;
-    const type = WINDOW6.performance.navigation.type;
-    const navigationEntry = {
-      entryType: "navigation",
-      startTime: 0,
-      type: type == 2 ? "back_forward" : type === 1 ? "reload" : "navigate"
-    };
-    for (const key in timing) {
-      if (key !== "navigationStart" && key !== "toJSON") {
-        navigationEntry[key] = Math.max(timing[key] - timing.navigationStart, 0);
-      }
-    }
-    return navigationEntry;
-  };
-  var getNavigationEntry = () => {
-    if (WINDOW6.__WEB_VITALS_POLYFILL__) {
-      return WINDOW6.performance && (performance.getEntriesByType && performance.getEntriesByType("navigation")[0] || getNavigationEntryFromPerformanceTiming());
-    } else {
-      return WINDOW6.performance && performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
     }
   };
 
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/getActivationStart.js
-  var getActivationStart = () => {
-    const navEntry = getNavigationEntry();
-    return navEntry && navEntry.activationStart || 0;
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/initMetric.js
-  var initMetric = (name, value) => {
-    const navEntry = getNavigationEntry();
-    let navigationType = "navigate";
-    if (navEntry) {
-      if (WINDOW6.document.prerendering || getActivationStart() > 0) {
-        navigationType = "prerender";
-      } else {
-        navigationType = navEntry.type.replace(/_/g, "-");
-      }
-    }
-    return {
-      name,
-      value: typeof value === "undefined" ? -1 : value,
-      rating: "good",
-      delta: 0,
-      entries: [],
-      id: generateUniqueID(),
-      navigationType
-    };
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/observe.js
-  var observe = (type, callback, opts) => {
-    try {
-      if (PerformanceObserver.supportedEntryTypes.includes(type)) {
-        const po = new PerformanceObserver((list) => {
-          callback(list.getEntries());
-        });
-        po.observe(
-          Object.assign(
-            {
-              type,
-              buffered: true
-            },
-            opts || {}
-          )
-        );
-        return po;
-      }
-    } catch (e2) {
-    }
-    return;
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/onHidden.js
-  var onHidden = (cb, once) => {
-    const onHiddenOrPageHide = (event) => {
-      if (event.type === "pagehide" || WINDOW6.document.visibilityState === "hidden") {
-        cb(event);
-        if (once) {
-          removeEventListener("visibilitychange", onHiddenOrPageHide, true);
-          removeEventListener("pagehide", onHiddenOrPageHide, true);
-        }
-      }
-    };
-    addEventListener("visibilitychange", onHiddenOrPageHide, true);
-    addEventListener("pagehide", onHiddenOrPageHide, true);
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/getCLS.js
-  var onCLS = (onReport) => {
-    const metric = initMetric("CLS", 0);
-    let report;
-    let sessionValue = 0;
-    let sessionEntries = [];
-    const handleEntries = (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.hadRecentInput) {
-          const firstSessionEntry = sessionEntries[0];
-          const lastSessionEntry = sessionEntries[sessionEntries.length - 1];
-          if (sessionValue && sessionEntries.length !== 0 && entry.startTime - lastSessionEntry.startTime < 1e3 && entry.startTime - firstSessionEntry.startTime < 5e3) {
-            sessionValue += entry.value;
-            sessionEntries.push(entry);
-          } else {
-            sessionValue = entry.value;
-            sessionEntries = [entry];
-          }
-          if (sessionValue > metric.value) {
-            metric.value = sessionValue;
-            metric.entries = sessionEntries;
-            if (report) {
-              report();
-            }
-          }
-        }
-      });
-    };
-    const po = observe("layout-shift", handleEntries);
-    if (po) {
-      report = bindReporter(onReport, metric);
-      onHidden(() => {
-        handleEntries(po.takeRecords());
-        report(true);
-      });
-    }
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/lib/getVisibilityWatcher.js
-  var firstHiddenTime = -1;
-  var initHiddenTime = () => {
-    return WINDOW6.document.visibilityState === "hidden" && !WINDOW6.document.prerendering ? 0 : Infinity;
-  };
-  var trackChanges = () => {
-    onHidden(({ timeStamp }) => {
-      firstHiddenTime = timeStamp;
-    }, true);
-  };
-  var getVisibilityWatcher = () => {
-    if (firstHiddenTime < 0) {
-      firstHiddenTime = initHiddenTime();
-      trackChanges();
-    }
-    return {
-      get firstHiddenTime() {
-        return firstHiddenTime;
-      }
-    };
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/getFID.js
-  var onFID = (onReport) => {
-    const visibilityWatcher = getVisibilityWatcher();
-    const metric = initMetric("FID");
-    let report;
-    const handleEntry = (entry) => {
-      if (entry.startTime < visibilityWatcher.firstHiddenTime) {
-        metric.value = entry.processingStart - entry.startTime;
-        metric.entries.push(entry);
-        report(true);
-      }
-    };
-    const handleEntries = (entries) => {
-      entries.forEach(handleEntry);
-    };
-    const po = observe("first-input", handleEntries);
-    report = bindReporter(onReport, metric);
-    if (po) {
-      onHidden(() => {
-        handleEntries(po.takeRecords());
-        po.disconnect();
-      }, true);
-    }
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/web-vitals/getLCP.js
-  var reportedMetricIDs = {};
-  var onLCP = (onReport) => {
-    const visibilityWatcher = getVisibilityWatcher();
-    const metric = initMetric("LCP");
-    let report;
-    const handleEntries = (entries) => {
-      const lastEntry = entries[entries.length - 1];
-      if (lastEntry) {
-        const value = Math.max(lastEntry.startTime - getActivationStart(), 0);
-        if (value < visibilityWatcher.firstHiddenTime) {
-          metric.value = value;
-          metric.entries = [lastEntry];
-          report();
-        }
-      }
-    };
-    const po = observe("largest-contentful-paint", handleEntries);
-    if (po) {
-      report = bindReporter(onReport, metric);
-      const stopListening = () => {
-        if (!reportedMetricIDs[metric.id]) {
-          handleEntries(po.takeRecords());
-          po.disconnect();
-          reportedMetricIDs[metric.id] = true;
-          report(true);
-        }
-      };
-      ["keydown", "click"].forEach((type) => {
-        addEventListener(type, stopListening, { once: true, capture: true });
-      });
-      onHidden(stopListening, true);
-    }
-  };
-
-  // node_modules/@sentry/tracing/esm/browser/metrics/utils.js
-  function isMeasurementValue(value) {
-    return typeof value === "number" && isFinite(value);
-  }
-  function _startChild(transaction, { startTimestamp, ...ctx }) {
-    if (startTimestamp && transaction.startTimestamp > startTimestamp) {
-      transaction.startTimestamp = startTimestamp;
-    }
-    return transaction.startChild({
-      startTimestamp,
-      ...ctx
-    });
-  }
-
-  // node_modules/@sentry/tracing/esm/browser/metrics/index.js
-  function getBrowserPerformanceAPI() {
-    return WINDOW6 && WINDOW6.addEventListener && WINDOW6.performance;
-  }
-  var _performanceCursor = 0;
-  var _measurements = {};
-  var _lcpEntry;
-  var _clsEntry;
-  function startTrackingWebVitals() {
-    const performance2 = getBrowserPerformanceAPI();
-    if (performance2 && browserPerformanceTimeOrigin) {
-      if (performance2.mark) {
-        WINDOW6.performance.mark("sentry-tracing-init");
-      }
-      _trackCLS();
-      _trackLCP();
-      _trackFID();
-    }
-  }
-  function startTrackingLongTasks() {
-    const entryHandler = (entries) => {
-      for (const entry of entries) {
-        const transaction = getActiveTransaction();
-        if (!transaction) {
-          return;
-        }
-        const startTime = msToSec(browserPerformanceTimeOrigin + entry.startTime);
-        const duration = msToSec(entry.duration);
-        transaction.startChild({
-          description: "Main UI thread blocked",
-          op: "ui.long-task",
-          startTimestamp: startTime,
-          endTimestamp: startTime + duration
-        });
-      }
-    };
-    observe("longtask", entryHandler);
-  }
-  function _trackCLS() {
-    onCLS((metric) => {
-      const entry = metric.entries.pop();
-      if (!entry) {
-        return;
-      }
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding CLS");
-      _measurements["cls"] = { value: metric.value, unit: "" };
-      _clsEntry = entry;
-    });
-  }
-  function _trackLCP() {
-    onLCP((metric) => {
-      const entry = metric.entries.pop();
-      if (!entry) {
-        return;
-      }
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding LCP");
-      _measurements["lcp"] = { value: metric.value, unit: "millisecond" };
-      _lcpEntry = entry;
-    });
-  }
-  function _trackFID() {
-    onFID((metric) => {
-      const entry = metric.entries.pop();
-      if (!entry) {
-        return;
-      }
-      const timeOrigin = msToSec(browserPerformanceTimeOrigin);
-      const startTime = msToSec(entry.startTime);
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding FID");
-      _measurements["fid"] = { value: metric.value, unit: "millisecond" };
-      _measurements["mark.fid"] = { value: timeOrigin + startTime, unit: "second" };
-    });
-  }
-  function addPerformanceEntries(transaction) {
-    const performance2 = getBrowserPerformanceAPI();
-    if (!performance2 || !WINDOW6.performance.getEntries || !browserPerformanceTimeOrigin) {
-      return;
-    }
-    (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Tracing] Adding & adjusting spans using Performance API");
-    const timeOrigin = msToSec(browserPerformanceTimeOrigin);
-    const performanceEntries = performance2.getEntries();
-    let responseStartTimestamp;
-    let requestStartTimestamp;
-    performanceEntries.slice(_performanceCursor).forEach((entry) => {
-      const startTime = msToSec(entry.startTime);
-      const duration = msToSec(entry.duration);
-      if (transaction.op === "navigation" && timeOrigin + startTime < transaction.startTimestamp) {
-        return;
-      }
-      switch (entry.entryType) {
-        case "navigation": {
-          _addNavigationSpans(transaction, entry, timeOrigin);
-          responseStartTimestamp = timeOrigin + msToSec(entry.responseStart);
-          requestStartTimestamp = timeOrigin + msToSec(entry.requestStart);
-          break;
-        }
-        case "mark":
-        case "paint":
-        case "measure": {
-          _addMeasureSpans(transaction, entry, startTime, duration, timeOrigin);
-          const firstHidden = getVisibilityWatcher();
-          const shouldRecord = entry.startTime < firstHidden.firstHiddenTime;
-          if (entry.name === "first-paint" && shouldRecord) {
-            (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding FP");
-            _measurements["fp"] = { value: entry.startTime, unit: "millisecond" };
-          }
-          if (entry.name === "first-contentful-paint" && shouldRecord) {
-            (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding FCP");
-            _measurements["fcp"] = { value: entry.startTime, unit: "millisecond" };
-          }
-          break;
-        }
-        case "resource": {
-          const resourceName = entry.name.replace(WINDOW6.location.origin, "");
-          _addResourceSpans(transaction, entry, resourceName, startTime, duration, timeOrigin);
-          break;
-        }
-      }
-    });
-    _performanceCursor = Math.max(performanceEntries.length - 1, 0);
-    _trackNavigator(transaction);
-    if (transaction.op === "pageload") {
-      if (typeof responseStartTimestamp === "number") {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding TTFB");
-        _measurements["ttfb"] = {
-          value: (responseStartTimestamp - transaction.startTimestamp) * 1e3,
-          unit: "millisecond"
-        };
-        if (typeof requestStartTimestamp === "number" && requestStartTimestamp <= responseStartTimestamp) {
-          _measurements["ttfb.requestTime"] = {
-            value: (responseStartTimestamp - requestStartTimestamp) * 1e3,
-            unit: "millisecond"
-          };
-        }
-      }
-      ["fcp", "fp", "lcp"].forEach((name) => {
-        if (!_measurements[name] || timeOrigin >= transaction.startTimestamp) {
-          return;
-        }
-        const oldValue = _measurements[name].value;
-        const measurementTimestamp = timeOrigin + msToSec(oldValue);
-        const normalizedValue = Math.abs((measurementTimestamp - transaction.startTimestamp) * 1e3);
-        const delta = normalizedValue - oldValue;
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Measurements] Normalized ${name} from ${oldValue} to ${normalizedValue} (${delta})`);
-        _measurements[name].value = normalizedValue;
-      });
-      const fidMark = _measurements["mark.fid"];
-      if (fidMark && _measurements["fid"]) {
-        _startChild(transaction, {
-          description: "first input delay",
-          endTimestamp: fidMark.value + msToSec(_measurements["fid"].value),
-          op: "ui.action",
-          startTimestamp: fidMark.value
-        });
-        delete _measurements["mark.fid"];
-      }
-      if (!("fcp" in _measurements)) {
-        delete _measurements.cls;
-      }
-      Object.keys(_measurements).forEach((measurementName) => {
-        transaction.setMeasurement(
-          measurementName,
-          _measurements[measurementName].value,
-          _measurements[measurementName].unit
-        );
-      });
-      _tagMetricInfo(transaction);
-    }
-    _lcpEntry = void 0;
-    _clsEntry = void 0;
-    _measurements = {};
-  }
-  function _addMeasureSpans(transaction, entry, startTime, duration, timeOrigin) {
-    const measureStartTimestamp = timeOrigin + startTime;
-    const measureEndTimestamp = measureStartTimestamp + duration;
-    _startChild(transaction, {
-      description: entry.name,
-      endTimestamp: measureEndTimestamp,
-      op: entry.entryType,
-      startTimestamp: measureStartTimestamp
-    });
-    return measureStartTimestamp;
-  }
-  function _addNavigationSpans(transaction, entry, timeOrigin) {
-    ["unloadEvent", "redirect", "domContentLoadedEvent", "loadEvent", "connect"].forEach((event) => {
-      _addPerformanceNavigationTiming(transaction, entry, event, timeOrigin);
-    });
-    _addPerformanceNavigationTiming(transaction, entry, "secureConnection", timeOrigin, "TLS/SSL", "connectEnd");
-    _addPerformanceNavigationTiming(transaction, entry, "fetch", timeOrigin, "cache", "domainLookupStart");
-    _addPerformanceNavigationTiming(transaction, entry, "domainLookup", timeOrigin, "DNS");
-    _addRequest(transaction, entry, timeOrigin);
-  }
-  function _addPerformanceNavigationTiming(transaction, entry, event, timeOrigin, description, eventEnd) {
-    const end = eventEnd ? entry[eventEnd] : entry[`${event}End`];
-    const start = entry[`${event}Start`];
-    if (!start || !end) {
-      return;
-    }
-    _startChild(transaction, {
-      op: "browser",
-      description: description || event,
-      startTimestamp: timeOrigin + msToSec(start),
-      endTimestamp: timeOrigin + msToSec(end)
-    });
-  }
-  function _addRequest(transaction, entry, timeOrigin) {
-    _startChild(transaction, {
-      op: "browser",
-      description: "request",
-      startTimestamp: timeOrigin + msToSec(entry.requestStart),
-      endTimestamp: timeOrigin + msToSec(entry.responseEnd)
-    });
-    _startChild(transaction, {
-      op: "browser",
-      description: "response",
-      startTimestamp: timeOrigin + msToSec(entry.responseStart),
-      endTimestamp: timeOrigin + msToSec(entry.responseEnd)
-    });
-  }
-  function _addResourceSpans(transaction, entry, resourceName, startTime, duration, timeOrigin) {
-    if (entry.initiatorType === "xmlhttprequest" || entry.initiatorType === "fetch") {
-      return;
-    }
-    const data = {};
-    if ("transferSize" in entry) {
-      data["Transfer Size"] = entry.transferSize;
-    }
-    if ("encodedBodySize" in entry) {
-      data["Encoded Body Size"] = entry.encodedBodySize;
-    }
-    if ("decodedBodySize" in entry) {
-      data["Decoded Body Size"] = entry.decodedBodySize;
-    }
-    if ("renderBlockingStatus" in entry) {
-      data["resource.render_blocking_status"] = entry.renderBlockingStatus;
-    }
-    const startTimestamp = timeOrigin + startTime;
-    const endTimestamp = startTimestamp + duration;
-    _startChild(transaction, {
-      description: resourceName,
-      endTimestamp,
-      op: entry.initiatorType ? `resource.${entry.initiatorType}` : "resource.other",
-      startTimestamp,
-      data
-    });
-  }
-  function _trackNavigator(transaction) {
-    const navigator2 = WINDOW6.navigator;
-    if (!navigator2) {
-      return;
-    }
-    const connection = navigator2.connection;
-    if (connection) {
-      if (connection.effectiveType) {
-        transaction.setTag("effectiveConnectionType", connection.effectiveType);
-      }
-      if (connection.type) {
-        transaction.setTag("connectionType", connection.type);
-      }
-      if (isMeasurementValue(connection.rtt)) {
-        _measurements["connection.rtt"] = { value: connection.rtt, unit: "millisecond" };
-      }
-    }
-    if (isMeasurementValue(navigator2.deviceMemory)) {
-      transaction.setTag("deviceMemory", `${navigator2.deviceMemory} GB`);
-    }
-    if (isMeasurementValue(navigator2.hardwareConcurrency)) {
-      transaction.setTag("hardwareConcurrency", String(navigator2.hardwareConcurrency));
-    }
-  }
-  function _tagMetricInfo(transaction) {
-    if (_lcpEntry) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding LCP Data");
-      if (_lcpEntry.element) {
-        transaction.setTag("lcp.element", htmlTreeAsString(_lcpEntry.element));
-      }
-      if (_lcpEntry.id) {
-        transaction.setTag("lcp.id", _lcpEntry.id);
-      }
-      if (_lcpEntry.url) {
-        transaction.setTag("lcp.url", _lcpEntry.url.trim().slice(0, 200));
-      }
-      transaction.setTag("lcp.size", _lcpEntry.size);
-    }
-    if (_clsEntry && _clsEntry.sources) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log("[Measurements] Adding CLS Data");
-      _clsEntry.sources.forEach(
-        (source, index) => transaction.setTag(`cls.source.${index + 1}`, htmlTreeAsString(source.node))
-      );
-    }
-  }
-
-  // node_modules/@sentry/tracing/esm/browser/request.js
-  var DEFAULT_TRACE_PROPAGATION_TARGETS = ["localhost", /^\//];
-  var defaultRequestInstrumentationOptions = {
-    traceFetch: true,
-    traceXHR: true,
-    tracingOrigins: DEFAULT_TRACE_PROPAGATION_TARGETS,
-    tracePropagationTargets: DEFAULT_TRACE_PROPAGATION_TARGETS
-  };
-  function instrumentOutgoingRequests(_options) {
-    const { traceFetch, traceXHR, tracePropagationTargets, tracingOrigins, shouldCreateSpanForRequest } = {
-      traceFetch: defaultRequestInstrumentationOptions.traceFetch,
-      traceXHR: defaultRequestInstrumentationOptions.traceXHR,
-      ..._options
-    };
-    const shouldCreateSpan = typeof shouldCreateSpanForRequest === "function" ? shouldCreateSpanForRequest : (_) => true;
-    const shouldAttachHeadersWithTargets = (url) => shouldAttachHeaders(url, tracePropagationTargets || tracingOrigins);
-    const spans = {};
-    if (traceFetch) {
-      addInstrumentationHandler("fetch", (handlerData) => {
-        fetchCallback(handlerData, shouldCreateSpan, shouldAttachHeadersWithTargets, spans);
-      });
-    }
-    if (traceXHR) {
-      addInstrumentationHandler("xhr", (handlerData) => {
-        xhrCallback(handlerData, shouldCreateSpan, shouldAttachHeadersWithTargets, spans);
-      });
-    }
-  }
-  function shouldAttachHeaders(url, tracePropagationTargets) {
-    return stringMatchesSomePattern(url, tracePropagationTargets || DEFAULT_TRACE_PROPAGATION_TARGETS);
-  }
-  function fetchCallback(handlerData, shouldCreateSpan, shouldAttachHeaders2, spans) {
-    if (!hasTracingEnabled() || !(handlerData.fetchData && shouldCreateSpan(handlerData.fetchData.url))) {
-      return;
-    }
-    if (handlerData.endTimestamp) {
-      const spanId = handlerData.fetchData.__span;
-      if (!spanId)
-        return;
-      const span = spans[spanId];
-      if (span) {
-        if (handlerData.response) {
-          span.setHttpStatus(handlerData.response.status);
-        } else if (handlerData.error) {
-          span.setStatus("internal_error");
-        }
-        span.finish();
-        delete spans[spanId];
-      }
-      return;
-    }
-    const currentScope = getCurrentHub().getScope();
-    const currentSpan = currentScope && currentScope.getSpan();
-    const activeTransaction = currentSpan && currentSpan.transaction;
-    if (currentSpan && activeTransaction) {
-      const span = currentSpan.startChild({
-        data: {
-          ...handlerData.fetchData,
-          type: "fetch"
-        },
-        description: `${handlerData.fetchData.method} ${handlerData.fetchData.url}`,
-        op: "http.client"
-      });
-      handlerData.fetchData.__span = span.spanId;
-      spans[span.spanId] = span;
-      const request = handlerData.args[0];
-      handlerData.args[1] = handlerData.args[1] || {};
-      const options = handlerData.args[1];
-      if (shouldAttachHeaders2(handlerData.fetchData.url)) {
-        options.headers = addTracingHeadersToFetchRequest(
-          request,
-          activeTransaction.getDynamicSamplingContext(),
-          span,
-          options
-        );
-      }
-    }
-  }
-  function addTracingHeadersToFetchRequest(request, dynamicSamplingContext, span, options) {
-    const sentryBaggageHeader = dynamicSamplingContextToSentryBaggageHeader(dynamicSamplingContext);
-    const sentryTraceHeader = span.toTraceparent();
-    const headers = typeof Request !== "undefined" && isInstanceOf(request, Request) ? request.headers : options.headers;
-    if (!headers) {
-      return { "sentry-trace": sentryTraceHeader, baggage: sentryBaggageHeader };
-    } else if (typeof Headers !== "undefined" && isInstanceOf(headers, Headers)) {
-      const newHeaders = new Headers(headers);
-      newHeaders.append("sentry-trace", sentryTraceHeader);
-      if (sentryBaggageHeader) {
-        newHeaders.append(BAGGAGE_HEADER_NAME, sentryBaggageHeader);
-      }
-      return newHeaders;
-    } else if (Array.isArray(headers)) {
-      const newHeaders = [...headers, ["sentry-trace", sentryTraceHeader]];
-      if (sentryBaggageHeader) {
-        newHeaders.push([BAGGAGE_HEADER_NAME, sentryBaggageHeader]);
-      }
-      return newHeaders;
-    } else {
-      const existingBaggageHeader = "baggage" in headers ? headers.baggage : void 0;
-      const newBaggageHeaders = [];
-      if (Array.isArray(existingBaggageHeader)) {
-        newBaggageHeaders.push(...existingBaggageHeader);
-      } else if (existingBaggageHeader) {
-        newBaggageHeaders.push(existingBaggageHeader);
-      }
-      if (sentryBaggageHeader) {
-        newBaggageHeaders.push(sentryBaggageHeader);
-      }
-      return {
-        ...headers,
-        "sentry-trace": sentryTraceHeader,
-        baggage: newBaggageHeaders.length > 0 ? newBaggageHeaders.join(",") : void 0
-      };
-    }
-  }
-  function xhrCallback(handlerData, shouldCreateSpan, shouldAttachHeaders2, spans) {
-    if (!hasTracingEnabled() || handlerData.xhr && handlerData.xhr.__sentry_own_request__ || !(handlerData.xhr && handlerData.xhr.__sentry_xhr__ && shouldCreateSpan(handlerData.xhr.__sentry_xhr__.url))) {
-      return;
-    }
-    const xhr = handlerData.xhr.__sentry_xhr__;
-    if (handlerData.endTimestamp) {
-      const spanId = handlerData.xhr.__sentry_xhr_span_id__;
-      if (!spanId)
-        return;
-      const span = spans[spanId];
-      if (span) {
-        span.setHttpStatus(xhr.status_code);
-        span.finish();
-        delete spans[spanId];
-      }
-      return;
-    }
-    const currentScope = getCurrentHub().getScope();
-    const currentSpan = currentScope && currentScope.getSpan();
-    const activeTransaction = currentSpan && currentSpan.transaction;
-    if (currentSpan && activeTransaction) {
-      const span = currentSpan.startChild({
-        data: {
-          ...xhr.data,
-          type: "xhr",
-          method: xhr.method,
-          url: xhr.url
-        },
-        description: `${xhr.method} ${xhr.url}`,
-        op: "http.client"
-      });
-      handlerData.xhr.__sentry_xhr_span_id__ = span.spanId;
-      spans[handlerData.xhr.__sentry_xhr_span_id__] = span;
-      if (handlerData.xhr.setRequestHeader && shouldAttachHeaders2(handlerData.xhr.__sentry_xhr__.url)) {
-        try {
-          handlerData.xhr.setRequestHeader("sentry-trace", span.toTraceparent());
-          const dynamicSamplingContext = activeTransaction.getDynamicSamplingContext();
-          const sentryBaggageHeader = dynamicSamplingContextToSentryBaggageHeader(dynamicSamplingContext);
-          if (sentryBaggageHeader) {
-            handlerData.xhr.setRequestHeader(BAGGAGE_HEADER_NAME, sentryBaggageHeader);
-          }
-        } catch (_) {
-        }
-      }
-    }
-  }
-
-  // node_modules/@sentry/tracing/esm/browser/router.js
-  function instrumentRoutingWithDefaults(customStartTransaction, startTransactionOnPageLoad = true, startTransactionOnLocationChange = true) {
-    if (!WINDOW6 || !WINDOW6.location) {
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn("Could not initialize routing instrumentation due to invalid location");
-      return;
-    }
-    let startingUrl = WINDOW6.location.href;
-    let activeTransaction;
-    if (startTransactionOnPageLoad) {
-      activeTransaction = customStartTransaction({
-        name: WINDOW6.location.pathname,
-        op: "pageload",
-        metadata: { source: "url" }
-      });
-    }
-    if (startTransactionOnLocationChange) {
-      addInstrumentationHandler("history", ({ to, from }) => {
-        if (from === void 0 && startingUrl && startingUrl.indexOf(to) !== -1) {
-          startingUrl = void 0;
-          return;
-        }
-        if (from !== to) {
-          startingUrl = void 0;
-          if (activeTransaction) {
-            (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] Finishing current transaction with op: ${activeTransaction.op}`);
-            activeTransaction.finish();
-          }
-          activeTransaction = customStartTransaction({
-            name: WINDOW6.location.pathname,
-            op: "navigation",
-            metadata: { source: "url" }
-          });
-        }
-      });
-    }
-  }
-
-  // node_modules/@sentry/tracing/esm/browser/browsertracing.js
-  var BROWSER_TRACING_INTEGRATION_ID = "BrowserTracing";
-  var DEFAULT_BROWSER_TRACING_OPTIONS = {
-    idleTimeout: DEFAULT_IDLE_TIMEOUT,
-    finalTimeout: DEFAULT_FINAL_TIMEOUT,
-    heartbeatInterval: DEFAULT_HEARTBEAT_INTERVAL,
-    markBackgroundTransactions: true,
-    routingInstrumentation: instrumentRoutingWithDefaults,
-    startTransactionOnLocationChange: true,
-    startTransactionOnPageLoad: true,
-    enableLongTask: true,
-    _experiments: {},
-    ...defaultRequestInstrumentationOptions
-  };
-  var BrowserTracing = class {
-    __init() {
-      this.name = BROWSER_TRACING_INTEGRATION_ID;
-    }
-    constructor(_options) {
-      BrowserTracing.prototype.__init.call(this);
-      this.options = {
-        ...DEFAULT_BROWSER_TRACING_OPTIONS,
-        ..._options
-      };
-      if (this.options._experiments.enableLongTask !== void 0) {
-        this.options.enableLongTask = this.options._experiments.enableLongTask;
-      }
-      if (_options && !_options.tracePropagationTargets && _options.tracingOrigins) {
-        this.options.tracePropagationTargets = _options.tracingOrigins;
-      }
-      startTrackingWebVitals();
-      if (this.options.enableLongTask) {
-        startTrackingLongTasks();
-      }
-    }
-    setupOnce(_, getCurrentHub2) {
-      this._getCurrentHub = getCurrentHub2;
-      const {
-        routingInstrumentation: instrumentRouting,
-        startTransactionOnLocationChange,
-        startTransactionOnPageLoad,
-        markBackgroundTransactions,
-        traceFetch,
-        traceXHR,
-        tracePropagationTargets,
-        shouldCreateSpanForRequest,
-        _experiments
-      } = this.options;
-      instrumentRouting(
-        (context) => this._createRouteTransaction(context),
-        startTransactionOnPageLoad,
-        startTransactionOnLocationChange
-      );
-      if (markBackgroundTransactions) {
-        registerBackgroundTabDetection();
-      }
-      if (_experiments.enableInteractions) {
-        this._registerInteractionListener();
-      }
-      instrumentOutgoingRequests({
-        traceFetch,
-        traceXHR,
-        tracePropagationTargets,
-        shouldCreateSpanForRequest
-      });
-    }
-    _createRouteTransaction(context) {
-      if (!this._getCurrentHub) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn(`[Tracing] Did not create ${context.op} transaction because _getCurrentHub is invalid.`);
-        return void 0;
-      }
-      const { beforeNavigate, idleTimeout, finalTimeout, heartbeatInterval } = this.options;
-      const isPageloadTransaction = context.op === "pageload";
-      const sentryTraceMetaTagValue = isPageloadTransaction ? getMetaContent("sentry-trace") : null;
-      const baggageMetaTagValue = isPageloadTransaction ? getMetaContent("baggage") : null;
-      const traceParentData = sentryTraceMetaTagValue ? extractTraceparentData(sentryTraceMetaTagValue) : void 0;
-      const dynamicSamplingContext = baggageMetaTagValue ? baggageHeaderToDynamicSamplingContext(baggageMetaTagValue) : void 0;
-      const expandedContext = {
-        ...context,
-        ...traceParentData,
-        metadata: {
-          ...context.metadata,
-          dynamicSamplingContext: traceParentData && !dynamicSamplingContext ? {} : dynamicSamplingContext
-        },
-        trimEnd: true
-      };
-      const modifiedContext = typeof beforeNavigate === "function" ? beforeNavigate(expandedContext) : expandedContext;
-      const finalContext = modifiedContext === void 0 ? { ...expandedContext, sampled: false } : modifiedContext;
-      finalContext.metadata = finalContext.name !== expandedContext.name ? { ...finalContext.metadata, source: "custom" } : finalContext.metadata;
-      this._latestRouteName = finalContext.name;
-      this._latestRouteSource = finalContext.metadata && finalContext.metadata.source;
-      if (finalContext.sampled === false) {
-        (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] Will not send ${finalContext.op} transaction because of beforeNavigate.`);
-      }
-      (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.log(`[Tracing] Starting ${finalContext.op} transaction on scope`);
-      const hub = this._getCurrentHub();
-      const { location } = WINDOW6;
-      const idleTransaction = startIdleTransaction(
-        hub,
-        finalContext,
-        idleTimeout,
-        finalTimeout,
-        true,
-        { location },
-        heartbeatInterval
-      );
-      idleTransaction.registerBeforeFinishCallback((transaction) => {
-        addPerformanceEntries(transaction);
-      });
-      return idleTransaction;
-    }
-    _registerInteractionListener() {
-      let inflightInteractionTransaction;
-      const registerInteractionTransaction = () => {
-        const { idleTimeout, finalTimeout, heartbeatInterval } = this.options;
-        const op = "ui.action.click";
-        if (inflightInteractionTransaction) {
-          inflightInteractionTransaction.finish();
-          inflightInteractionTransaction = void 0;
-        }
-        if (!this._getCurrentHub) {
-          (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn(`[Tracing] Did not create ${op} transaction because _getCurrentHub is invalid.`);
-          return void 0;
-        }
-        if (!this._latestRouteName) {
-          (typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__) && logger.warn(`[Tracing] Did not create ${op} transaction because _latestRouteName is missing.`);
-          return void 0;
-        }
-        const hub = this._getCurrentHub();
-        const { location } = WINDOW6;
-        const context = {
-          name: this._latestRouteName,
-          op,
-          trimEnd: true,
-          metadata: {
-            source: this._latestRouteSource || "url"
-          }
-        };
-        inflightInteractionTransaction = startIdleTransaction(
-          hub,
-          context,
-          idleTimeout,
-          finalTimeout,
-          true,
-          { location },
-          heartbeatInterval
-        );
-      };
-      ["click"].forEach((type) => {
-        addEventListener(type, registerInteractionTransaction, { once: false, capture: true });
-      });
-    }
-  };
-  function getMetaContent(metaName) {
-    const metaTag = getDomElement(`meta[name=${metaName}]`);
-    return metaTag ? metaTag.getAttribute("content") : null;
-  }
-
-  // node_modules/@sentry/tracing/esm/index.js
-  if (typeof __SENTRY_TRACING__ === "undefined" || __SENTRY_TRACING__) {
-    addExtensionMethods();
-  }
-
-  // src/logger.ts
-  init({
-    dsn: "https://b899cc8fbe2b412c82a5355e82e1842f@o526305.ingest.sentry.io/4504658475876352",
-    integrations: [new BrowserTracing()],
-    tracesSampleRate: 0.1,
-    release: "dictionary@23.2.10",
-    environment: "DEV"
-  });
-  var _Logger = class {
+  // src/utils/logger.ts
+  var EXTENSION_NAME = manifest_default.__package_name__;
+  var Logger = class {
     constructor(tag) {
       this.tag = "";
-      this.tag = tag;
+      this.debug = (...messages) => this.internalLog(3 /* DEBUG */, ...messages);
+      this.log = (...messages) => this.internalLog(2 /* INFO */, ...messages);
+      this.warn = (...messages) => this.internalLog(1 /* WARNING */, ...messages);
+      this.error = (...messages) => this.internalLog(0 /* ERROR */, ...messages);
+      this.tag = EXTENSION_NAME + "." + (typeof tag === "string" ? tag : tag.constructor.name);
+      if (!IS_DEV_BUILD) {
+        this.initSentry();
+      }
+      this.listenForBgLogs();
     }
-    debug(...messages) {
-      this.internalLog(3 /* DEBUG */, ...messages);
+    initSentry() {
+      init({
+        dsn: manifest_default.__sentry_dsn__,
+        tracesSampleRate: 0.1,
+        release: EXTENSION_NAME + "@" + manifest_default.version,
+        environment: "PROD"
+      });
     }
-    log(...messages) {
-      this.internalLog(2 /* INFO */, ...messages);
-    }
-    warn(...messages) {
-      this.internalLog(1 /* WARNING */, ...messages);
-    }
-    error(...messages) {
-      this.internalLog(0 /* ERROR */, ...messages);
+    listenForBgLogs() {
+      chrome.runtime.onMessage.addListener((message, sender) => {
+        if (sender.id !== chrome.runtime.id || message.action != "log") {
+          return;
+        }
+        this.internalLogTagOverride(
+          message.data.level,
+          message.data.tag,
+          ...message.data.messages
+        );
+      });
     }
     internalLog(level, ...messages) {
+      this.internalLogTagOverride(level, this.tag, ...messages);
+    }
+    internalLogTagOverride(level, tag, ...messages) {
       const d3 = new Date(Date.now());
       const output = [
         "%c%s %s",
         "color: blue",
         `[${d3.getHours()}:${d3.getMinutes()}:${d3.getSeconds()}]`,
-        this.tag,
+        tag,
         ...messages
       ];
-      if (!_Logger.debugMode) {
+      if (!IS_DEV_BUILD) {
         switch (level) {
           case 1 /* WARNING */:
-          case 2 /* INFO */:
-            captureMessage(messages.join(" "));
+            captureMessage(output.join(" "));
             break;
           case 0 /* ERROR */:
-            captureException(messages);
+            captureException(output.join(" "));
             break;
         }
         return;
@@ -6424,8 +4682,6 @@ The transaction will not be sampled. Please use the ${configInstrumenter} instru
       }
     }
   };
-  var Logger = _Logger;
-  Logger.debugMode = true;
 
   // src/utils/winbox/template.js
   var template = document.createElement("div");
