@@ -18,8 +18,12 @@ Software Engineer @ Google <br>
 "Good design is as little design as possible" - Dieter Rams
 </div>
 
-
 <hr class="section-separator" />
 
 {% include_relative featured_extensions.md %}
 
+<div class="design-notice">
+<h4>Calling All Design Jedis!</h4>
+<p>Hey talented UI/UX wizards of the digital realm! 👋 This awesome open-source project is in dire need of some aesthetic magic. If you can make pixels dance, and create UIs so sleek even the code will blush, I'd love your design superpowers on board. Let's make this project shine brighter than a supernova on a disco night! 💫🕺 </p>
+<a href="mailto:hello@essentialkit.org?subject=Let's Design Some Magic!">Message hello@essentialkit.org</a>
+</div>
