@@ -1,6 +1,6 @@
 {%- if site.extensions.size > 0 -%}
 
-  <h2 class="post-list-heading">{{ page.list_title | default: "Extensions" }}</h2>
+  <h2 class="post-list-heading">Featured Extensions</h2>
   <ul class="post-list">
     {%- for extension in site.extensions -%}
     {%- if extension.show_on_homepage -%}
