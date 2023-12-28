@@ -1,14 +1,24 @@
 ---
-layout: project-left
-title: "Emoji Keyboard"
-description: "An extension that brings emoji support to text input."
-date: 2018-12-20
-weight: 2
-thumbnail: "/assets/images/gen/projects/emoji-board.jpeg"
-image: "/assets/images/gen/projects/emoji-board.jpeg"
-published: false
-gallery:
-  - image: "/assets/images/gen/projects/emoji-board.jpeg"
+layout              : extension
+permalink           : /smart-emoji-keyboard
+title               : Smart Emoji Keyboard
+description         : Invoke an AI-powered emoji keyboard by typing ":" in any input
+created_date        : 2023-03-25
+chrome_id           : nekacekgelnakbmhepjioandkacfablo
+website             : https://smartemoji.xyz
+github_repo         : https://github.com/essentialkit/emoji-keyboard
+feedback_url        : https://forms.gle/8e94ypTgY3ZQiR948
+logo_128            : /assets/demos/emoji-keyboard/assets/logo-128x128.png
+
+# These would be displayed in a carousel and should showcase the different UIs of the extension.
+screenshots:
+  - /assets/demos/emoji-keyboard/assets/screenshot.png
+
+show_on_homepage    : false
+content_class       : emoji-keyboard
+ratings             : 5
+active_users        : 4K+
+
 ---
 
 Emoji has become the 🆕 medium of shorthand expression. Trying to describe 🤯 or 😭 with words is now old school. Emojis embody the saying that a picture is worth a thousand words. Want to look 😎 online? You definitely need to replace "hot" with 🔥 or 💣 or 💥.
