@@ -85,4 +85,18 @@ faqs                :
 
 ---
 
-When compared to typing, voice search is 3x faster, far more ergonomic (no more wrist pains) and the queries are more natural and expressive. I think the main reason typing is more popular than speaking is because the keyboard preceded the microphone, and it took long for speech-to-text software to reach the point of understanding accents. It's about time we reversed the statistic!
+When compared to typing, voice search is 3x faster, more ergonomic and the queries are more natural and expressive. This extension enables you to click once on a browser icon and perform a search with your voice.
+
+This voice search extension is part of my effort to bring voice forward experiences to the browser. I think the main reason typing is more popular than speaking is because the keyboard preceded the microphone, and it took long for speech-to-text software to reach the point of understanding accents. It's about time we reversed the statistic!
+
+When compared to typing, voice is:
+
+* 🏃‍♀️ Faster: Like 3X faster than typing.
+* 🍹 Easier: You can dictate notes while pacing, eating, driving.
+* 👶 Natural: Voice queries are more expressive, leading to more featured snippets in search results.
+* ♿ Accessible: Everyone can speak, 2yr olds, tired grannies, illitrates, name it.
+
+My goal is to make it voice interaction as ubiquitous as typing... on the web. There are two parts to it
+
+👥 Helping end-users discover and use voice input.
+🏢 Working with publishers to make their content more accessible through voice.
