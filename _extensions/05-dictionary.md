@@ -21,7 +21,7 @@ content_class       : dictionary
 ratings             : 5
 active_users        : 4K+
 demo_content        : '<img src="/assets/demos/dictionary/assets/screenshot.jpeg">'
-xdemo_content_old    : |
+demo_content    : |
   <div class="dictionary-demo">
     <link rel="stylesheet" href="/assets/demos/dictionary/content-script/content-script.css">
     <script async defer src="/assets/demos/dictionary/content-script/content-script.js"></script>
@@ -31,22 +31,15 @@ xdemo_content_old    : |
     <img src="/assets/demos/dictionary/assets/screenshot.jpeg">
 
     <p class="notice">
-      Note:<br>Several features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.        
+      Note:<br>A live demo of this extension is not available on this page since it depends on APIs that are only available in the Chrome Extensions context.     
     </p>
       
-    <p>You can trigger and update the demo (floating panel) by selecting text and clicking "Search".</p>
-    <p>You can trigger the preview functionality by hovering over a link like this <a href="https://en.wikipedia.org/wiki/ChatGPT">Wikipedia article on ChatGPT</a>.</p>
+    <p>You can trigger the define popup by selecting a text and clicking the "define" tooltip.</p>
   </div> 
 
-  <script>
-    window.addEventListener("load", (event) => {
-      console.log("showing dictionary demo");
-        window.postMessage(
-          { application: "dictionary", action: "define", data: "Generative AI", mode: "demo" },
-          window.location.origin
-        );
-    });
-  </script>
+# Additional notes on live-demo availability:
+# It relies on injecting a script to modify the google.com page that is in an iframe.
+# Only extensions can inject scripts into arbitrary cross-origin pages.
 
 # For icons, see https://fonts.google.com/icons
 features            :
