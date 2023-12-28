@@ -34,10 +34,11 @@ demo_content        : |
       
     <p>You can trigger and update the demo (floating panel) by selecting text and clicking "Search".</p>
     <p>You can trigger the preview functionality by hovering over a link like this <a href="https://en.wikipedia.org/wiki/ChatGPT">Wikipedia article on ChatGPT</a>.</p>
+    <button class="btn btn-primary" id="demo-button">Show Demo</button>
   </div> 
 
   <script>
-    window.addEventListener("load", (event) => {
+    document.querySelector("#demo-button").addEventListener("click", (event) => {
         window.postMessage(
           { application: "better-previews", action: "search", data: "Generative AI", mode: "demo" },
           window.location.origin
