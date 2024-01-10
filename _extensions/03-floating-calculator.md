@@ -21,10 +21,10 @@ ratings             : 4.9
 active_users        : 7K+
 demo_content        : |
   <div class="calculator">
-    <link rel="stylesheet" href="/assets/demos/calculator/content-script.css">
-    <script async defer src="/assets/demos/calculator/content-script.js"></script>
+    <link rel="stylesheet" href="/assets/demos/calculator/content-script/content-script.css">
+    <script async defer src="/assets/demos/calculator/content-script/content-script.js"></script>
     <h3>Live demo</h3>
-    <iframe src="/assets/demos/calculator/calc.html"></iframe>
+    <iframe src="/assets/demos/calculator/standalone/calc.html"></iframe>
     <div>      
       <p class="notice">
         Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.

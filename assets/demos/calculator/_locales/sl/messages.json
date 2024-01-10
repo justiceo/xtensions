@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "Plavajoči znanstveni kalkulator",
+    "description": "The name of the extension"
+  },
+  "appShortName": {
+    "message": "Kalkulator",
+    "description": "The short-version name of the extension name"
+  },
+  "appDesc": {
+    "message": "Plavajoči znanstveni kalkulator kjer koli ga potrebujete",
+    "description": "The description of your extension"
+  },
+  "calculator_cue": {
+    "message": "Kalkulator",
+    "description": "The search query cue for calculator"
+  }
+}

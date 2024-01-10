@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/popup/popup.css"],
+  "sourcesContent": ["body {\n  padding: 0;\n  margin: 0;\n}\n"],
+  "mappings": ";AAAA;AACE;AACA;AAAA;",
+  "names": []
+}

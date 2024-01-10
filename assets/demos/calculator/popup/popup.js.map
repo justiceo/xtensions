@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/popup/popup.ts"],
+  "sourcesContent": ["import \"./popup.css\";\n\ndocument.addEventListener(\"DOMContentLoaded\", (e) => {\n  const standaloneLink = `chrome-extension://${chrome.i18n.getMessage(\n    \"@@extension_id\",\n  )}/standalone/calc.html`;\n  const frame = document.querySelector(\"iframe\");\n  if (!frame) {\n    console.error(\"iframe element should be present in the popup\");\n    return;\n  }\n  frame.src = standaloneLink;\n});\n"],
+  "mappings": ";;;AAEA,WAAS,iBAAiB,oBAAoB,CAAC,MAAM;AACnD,UAAM,iBAAiB,sBAAsB,OAAO,KAAK;AAAA,MACvD;AAAA,IACF;AACA,UAAM,QAAQ,SAAS,cAAc,QAAQ;AAC7C,QAAI,CAAC,OAAO;AACV,cAAQ,MAAM,+CAA+C;AAC7D;AAAA,IACF;AACA,UAAM,MAAM;AAAA,EACd,CAAC;",
+  "names": []
+}

@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "Schwimmender wissenschaftlicher Taschenrechner",
+    "description": "The name of the extension"
+  },
+  "appShortName": {
+    "message": "Taschenrechner",
+    "description": "The short-version name of the extension name"
+  },
+  "appDesc": {
+    "message": "Ein schwebender wissenschaftlicher Taschenrechner überall, wo Sie es brauchen",
+    "description": "The description of your extension"
+  },
+  "calculator_cue": {
+    "message": "Taschenrechner",
+    "description": "The search query cue for calculator"
+  }
+}
