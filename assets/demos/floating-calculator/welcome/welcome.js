@@ -8316,7 +8316,7 @@ Url: ${_getEventFilterUrl(event)}`
       if (window.location.protocol === "chrome-extension:") {
         return chrome.runtime.getURL(path);
       } else if (window.location.hostname === "127.0.0.1" || window.location.hostname === "essentialkit.org") {
-        return window.location.origin + "/assets/demos/calculator/standalone/calc.html";
+        return window.location.origin + "/assets/demos/floating-calculator/standalone/calc.html";
       }
       console.error("Invalid path");
       return "";

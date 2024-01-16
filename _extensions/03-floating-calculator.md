@@ -12,9 +12,9 @@ logo_128            : /assets/imgs/calculator-logo-128x128.png
 
 # These would be displayed in a carousel and should showcase the different UIs of the extension.
 screenshots:
-  - /assets/demos/calculator/assets/screenshot-full-cover-1280x800.JPEG
-  - /assets/demos/calculator/assets/screenshot-history-cover-1280x800.JPEG
-  - /assets/demos/calculator/assets/screenshot-basic-cover-1280x800.JPEG
+  - /assets/demos/floating-calculator/assets/screenshot-full-cover-1280x800.JPEG
+  - /assets/demos/floating-calculator/assets/screenshot-history-cover-1280x800.JPEG
+  - /assets/demos/floating-calculator/assets/screenshot-basic-cover-1280x800.JPEG
 
 show_on_homepage    : true
 content_class       : calculator
@@ -22,10 +22,10 @@ ratings             : 4.9
 active_users        : 7K+
 demo_content        : |
   <div class="calculator">
-    <link rel="stylesheet" href="/assets/demos/calculator/content-script/content-script.css">
-    <script async defer src="/assets/demos/calculator/content-script/content-script.js"></script>
+    <link rel="stylesheet" href="/assets/demos/floating-calculator/content-script/content-script.css">
+    <script async defer src="/assets/demos/floating-calculator/content-script/content-script.js"></script>
     <h3>Live demo</h3>
-    <iframe src="/assets/demos/calculator/standalone/calc.html"></iframe>
+    <iframe src="/assets/demos/floating-calculator/standalone/calc.html"></iframe>
     <div>      
       <p class="notice">
         Note:<br>Some features of this extension may not work in this demo due to inability to access the relevant Chrome Extension APIs / UIs from a page context.
