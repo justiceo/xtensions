@@ -8310,36 +8310,22 @@ Url: ${_getEventFilterUrl(event)}`
 
   // src/content-script/previewr.ts
   var iframeName = "essentialkit_calc_frame";
-  var apis = {
-    default: {
-      link: chrome?.runtime?.getURL,
-      standaloneLink: () => chrome?.runtime?.getURL("standalone/calc.html")
-    },
-    demo: {
-      link: (path) => {
-        if (window.location.protocol === "chrome-extension:") {
-          return chrome.runtime.getURL(path);
-        } else if (window.location.host === "127.0.0.1:3000") {
-          return "http://127.0.0.1:3000/build/chrome-dev/" + path;
-        }
-        console.error("Invalid path");
-        return "";
-      },
-      standaloneLink: () => {
-        if (window.location.protocol === "chrome-extension:") {
-          return chrome.runtime.getURL("standalone/calc.html");
-        } else if (window.location.hostname === "127.0.0.1" || window.location.hostname === "essentialkit.org") {
-          return window.location.origin + "/assets/demos/calculator/standalone/calc.html";
-        }
-        console.error("Invalid path");
-        return "";
+  var getUrl = {
+    default: chrome?.runtime?.getURL,
+    demo: (path) => {
+      if (window.location.protocol === "chrome-extension:") {
+        return chrome.runtime.getURL(path);
+      } else if (window.location.hostname === "127.0.0.1" || window.location.hostname === "essentialkit.org") {
+        return window.location.origin + "/assets/demos/calculator/standalone/calc.html";
       }
+      console.error("Invalid path");
+      return "";
     }
   };
   var Previewr = class {
     constructor() {
       this.logger = new Logger("previewr");
-      this.api = apis.default;
+      this.mode = "default";
       this.onEscHandler = (evt) => {
         evt = evt || window.event;
         var isEscape = false;
@@ -8378,15 +8364,14 @@ Url: ${_getEventFilterUrl(event)}`
     }
     async handleMessage(message) {
       this.logger.debug("#handleMessage: ", message);
-      this.api = apis.default;
       const mode = message.mode;
       if (mode === "demo") {
-        this.api = apis.demo;
+        this.mode = "demo";
       }
       switch (message.action) {
         case "toggle-calculator":
           try {
-            let link = this.api.standaloneLink();
+            let link = getUrl[this.mode]("standalone/calc.html");
             console.log("creatign url", link);
             let newUrl = new URL(link);
             if (newUrl.href === this.url?.href) {
@@ -8462,7 +8447,7 @@ Url: ${_getEventFilterUrl(event)}`
         pos = await this.getPos(point);
       }
       return {
-        icon: this.api.link("assets/logo-24x24.png"),
+        icon: getUrl[this.mode]("assets/logo-24x24.png"),
         x: pos.x,
         y: pos.y,
         width: "440px",

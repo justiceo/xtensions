@@ -12,8 +12,9 @@ logo_128            : /assets/imgs/calculator-logo-128x128.png
 
 # These would be displayed in a carousel and should showcase the different UIs of the extension.
 screenshots:
-  - /assets/imgs/calculator-screenshot1.png
-  - /assets/imgs/calculator-screenshot2.jpeg
+  - /assets/demos/calculator/assets/screenshot-full-cover-1280x800.JPEG
+  - /assets/demos/calculator/assets/screenshot-history-cover-1280x800.JPEG
+  - /assets/demos/calculator/assets/screenshot-basic-cover-1280x800.JPEG
 
 show_on_homepage    : true
 content_class       : calculator
@@ -68,6 +69,9 @@ faqs                :
   - title           : Does it work on other webkit browsers like Edge, Opera, Brave?
     description     : Yes it should, though I have not verified.
     id              : one
+  - title           : The calculator gave an incorrect answer
+    description     : Check that the right angle mode is set, either Degrees or Radians.
+    id              : two
 
 ---
 
