@@ -1,8 +1,8 @@
-title: Essential Kit
+title: Xtensions
 description: A collection of open-source, privacy-friendly and secure alternatives for the browser extensions that netizens ❤️
 author: 
   name: Justice Ogbonna
-  email: hello@essentialkit.org
+  email: hello@xtensions.net
 
 theme: minima
 
@@ -10,7 +10,7 @@ theme: minima
 # repository: essentialkit/website
 
 # Minima social links
-github_username: essentialkit
+github_username: justiceo
 rss: rss
 
 # Minima: show excerpts in the frontpage

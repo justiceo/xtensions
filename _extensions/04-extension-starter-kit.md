@@ -6,7 +6,7 @@ description         : Browser extension example. Typescript, E2E tests, icon gen
 created_date        : 2020-4-17
 chrome_id           : 
 website             : 
-github_repo         : https://github.com/essentialkit/xtension
+github_repo         : https://github.com/justiceo/xtension
 feedback_url        : 
 logo_128            : /assets/imgs/xtension-logo-128x128.png
 published           : false

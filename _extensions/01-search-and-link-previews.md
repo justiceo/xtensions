@@ -6,7 +6,7 @@ description         : A browser extension for previewing links and search result
 created_date        : 2023-01-01
 chrome_id           : mmmfofondapflhgbdidadejnechhjocm
 website             : https://betterpreviews.com
-github_repo         : https://github.com/essentialkit/link-previews
+github_repo         : https://github.com/justiceo/link-previews
 feedback_url        : https://forms.gle/DtfV94iG4oqXQFFo9
 logo_128            : /assets/demos/search-preview/assets/logo-128x128.png
 

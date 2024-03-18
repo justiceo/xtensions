@@ -6,7 +6,7 @@ description         : A modern, comprehensive dictionary for all languages
 created_date        : 2023-04-01
 chrome_id           : nhbchcfeodkcblfpdjdhelcfbefefmag
 website             : https://e-dictionary.org
-github_repo         : https://github.com/essentialkit/e-dictionary
+github_repo         : https://github.com/justiceo/e-dictionary
 feedback_url        : https://forms.gle/oRACFiJQCZW77Ssu8
 logo_128            : /assets/demos/dictionary/assets/logo-128x128.png
 

@@ -6,7 +6,7 @@ description         : Invoke an AI-powered emoji keyboard by typing ":" in any i
 created_date        : 2023-03-25
 chrome_id           : nekacekgelnakbmhepjioandkacfablo
 website             : https://smartemoji.xyz
-github_repo         : https://github.com/essentialkit/emoji-keyboard
+github_repo         : https://github.com/justiceo/emoji-keyboard
 feedback_url        : https://forms.gle/8e94ypTgY3ZQiR948
 logo_128            : /assets/demos/emoji-keyboard/assets/logo-128x128.png
 

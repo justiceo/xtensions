@@ -6,7 +6,7 @@ description         : Voice Search enables you to search the web using your voic
 created_date        : 2020-4-17
 chrome_id           : agmgoemhckhccgibmoigonndjhjllcoh
 website             : https://audate.app
-github_repo         : https://github.com/audateapp/voice-search
+github_repo         : https://github.com/justiceo/voice-search-extension
 feedback_url        : https://forms.gle/DuMbMQ76caFQee3z6
 logo_128            : /assets/demos/audate/assets/images/logo-128x128.png
 

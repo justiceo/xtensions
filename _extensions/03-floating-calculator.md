@@ -6,7 +6,7 @@ description         : A floating scientific calculator anywhere you need it
 created_date        : 2020-4-17
 chrome_id           : mbfnbhfjnjeedaknilkfegfnnmmmmpmn
 website             : https://floatingcalc.com
-github_repo         : https://github.com/essentialkit/floating-calculator
+github_repo         : https://github.com/justiceo/floating-calculator
 feedback_url        : https://forms.gle/GYbKGS8Wy1mbgEiU6
 logo_128            : /assets/imgs/calculator-logo-128x128.png
 

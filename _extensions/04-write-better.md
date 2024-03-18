@@ -4,7 +4,7 @@ published_date      : 2017-4-17
 layout              : extension
 permalink           : /write-better
 chrome_id           : nnnnnpmcdcloafmfkiihafnjidjkfmek
-website             : https://github.com/WritingAid/write-better
+website             : https://github.com/justiceo/write-better
 published           : false
 ---
 
