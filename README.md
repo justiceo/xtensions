@@ -1,5 +1,5 @@
-# Essential Kit
-This is source for the website at http://essentialkit.org
+# Xtensions
+This is source for the website at https://xtensions.net
 <br />
 
 This is a template and some instructions for running Github Pages with the minima theme. This repo has the minimum pieces for a blog using Jekyll and Github Pages:

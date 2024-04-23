@@ -7,7 +7,7 @@ author:
 theme: minima
 
 # base_url: /website
-# repository: essentialkit/website
+repository: https://github.com/justiceo/xtensions
 
 # Minima social links
 github_username: justiceo

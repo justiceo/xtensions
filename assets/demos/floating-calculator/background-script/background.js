@@ -89,7 +89,7 @@ var IS_DEV_BUILD=true;
     __firefox__key: "",
     __firefox__browser_specific_settings: {
       gecko: {
-        id: "scientific-calc@essentialkit.org"
+        id: "scientific-calc@xtensions.net"
       }
     }
   };

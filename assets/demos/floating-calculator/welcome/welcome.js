@@ -5011,7 +5011,7 @@ Url: ${_getEventFilterUrl(event)}`
     __firefox__key: "",
     __firefox__browser_specific_settings: {
       gecko: {
-        id: "scientific-calc@essentialkit.org"
+        id: "scientific-calc@xtensions.net"
       }
     }
   };
@@ -8315,7 +8315,7 @@ Url: ${_getEventFilterUrl(event)}`
     demo: (path) => {
       if (window.location.protocol === "chrome-extension:") {
         return chrome.runtime.getURL(path);
-      } else if (window.location.hostname === "127.0.0.1" || window.location.hostname === "essentialkit.org") {
+      } else if (window.location.hostname === "127.0.0.1" || window.location.hostname === "essentialkit.org" || window.location.hostname === "xtensions.net") {
         return window.location.origin + "/assets/demos/floating-calculator/standalone/calc.html";
       }
       console.error("Invalid path");

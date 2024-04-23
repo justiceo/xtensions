@@ -62,7 +62,7 @@ Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies remain on Y
 
 We use both Session and Persistent Cookies for the purposes set out below:
 
-- **Necessary / Essential Cookies**
+- **Necessary Cookies**
 
   Type: Session Cookies
 
@@ -179,4 +179,4 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 
 If you have any questions about this Privacy Policy, You can contact us:
 
-- By email: info@essentialkit.org
+- By email: info@xtensions.net
