@@ -24,7 +24,7 @@ permalink: "/localizer"
         <div class="input-group mb-3 mt-3">
           <input type="text" id="extensionUrl" class="form-control" placeholder="Enter Chrome extension URL">
           <div class="input-group-append">
-            <button class="btn btn-primary" type="button" id="fetchExtensionBtn">Fetch extension</button>
+            <button class="btn btn-primary" type="button" id="fetchExtensionBtn" data-loading-text="Fetching...">Fetch extension</button>
           </div>
         </div>
         <div id="uploadMessage" class="mt-3"></div>
@@ -33,7 +33,7 @@ permalink: "/localizer"
     <div class="card mb-4" id="translateCard">
       <div class="card-body">
         <h5 class="card-title">2. Translate</h5>
-        <p class="card-text">Translate extension to any of the 52 supported languages on the Chrome Webstore by <a href="#" id="selectLocalesLink">selecting target locales</a>.</p>
+        <p class="card-text">Translate extension to all the 52 supported languages on the Chrome Webstore by <a href="#" id="selectLocalesLink">selecting target locales</a>.</p>
         <div id="localesList" class="locale-list bg-light border pl-3 pr-3 ml-n3 mr-n3" style="display: none;">
           <a id="deselectAllBtn" class="mt-2 d-block">Deselect All</a>
           <div class="form-check">
@@ -261,7 +261,7 @@ permalink: "/localizer"
         <p id="selectedLocales" class="mt-2"></p>
         <div id="localeNotice" class="alert alert-warning mt-2" style="display: none;"></div>
         <div class="text-center">
-          <button id="translateBtn" class="btn btn-primary" disabled>Begin translation</button>
+          <button id="translateBtn" class="btn btn-primary" disabled data-loading-text="Translating...">Begin translation</button>
         </div>
         <div class="progress mt-3" style="display: none;">
           <div id="translationProgress" class="progress-bar" role="progressbar" style="width: 0%; height: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -274,7 +274,7 @@ permalink: "/localizer"
         <h5 class="card-title">3. Download</h5>
         <p class="card-text">Click download to save your translated extension.</p>
         <div class="text-center">
-          <button id="downloadBtn" class="btn btn-primary" disabled>Download</button>
+          <button id="downloadBtn" class="btn btn-primary" disabled data-loading-text="Preparing files...">Download</button>
         </div>
         <div id="downloadMessage" class="mt-3"></div>
       </div>
@@ -363,8 +363,6 @@ permalink: "/localizer"
   "zh-TW",
 ];
 
-
-const defaultLocales = ["en", "es", "zh_CN", "hi", "ar"];
 
 const x1 = "QUl6YVN5QktjRTNkNjVXVU";
 const x2 = "Z6VDJFTTlQSnJrZUtINFZDcThzelBn";
@@ -530,79 +528,121 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Function to handle the click event of the translate button
   function handleTranslateButtonClick() {
     if (uploadedZip) {
-      // Hide the progress bar before starting a new translation
-      document.querySelector(".progress").style.display = "none";
-      translateExtension(uploadedZip);
+      var translateButton = document.getElementById("translateBtn");
+      showLoadingSpinner(translateButton);
+      translateExtension(uploadedZip)
+        .then(() => {
+          removeLoadingSpinner(translateButton);
+        })
+        .catch((error) => {
+          removeLoadingSpinner(translateButton);
+          displayTranslateError("Error translating extension: " + error.message);
+        });
     }
   }
 
-  // Function to translate the extension using the Google Translate API
-  function translateExtension(zip) {
-    JSZip.loadAsync(zip).then(function (zip) {
-      zip
-        .file("_locales/" + defaultLocale + "/messages.json")
-        .async("string")
-        .then(function (content) {
-          var messages = JSON.parse(content);
-          var apiKey = atob(x1 + x2);
-          console.log("api key:", apiKey);
+function translateExtension(zip) {
+  return JSZip.loadAsync(zip).then(function (zip) {
+    return zip
+      .file("_locales/" + defaultLocale + "/messages.json")
+      .async("string")
+      .then(function (content) {
+        var messages = JSON.parse(content);
+        var selectedLocales = getSelectedLocales();
+        var translatedCount = 0;
 
-          var selectedLocales = getSelectedLocales();
-          var translatedCount = 0;
-          var translatePromises = selectedLocales.map(function (locale) {
-            var translationPromises = Object.keys(messages).map(function (key) {
-              var message = messages[key].message;
-              var url =
-                "https://translation.googleapis.com/language/translate/v2?key=" +
-                apiKey;
-              url += "&q=" + encodeURIComponent(message);
-              url += "&target=" + locale;
-              return fetch(url)
-                .then(function (response) {
-                  return response.json();
-                })
-                .then(function (data) {
-                  return {
-                    key: key,
-                    message: data.data.translations[0].translatedText,
-                  };
-                });
-            });
+        var mapToTranslate = getMapToTranslate(messages);
+        var requestBody = createRequestBody(mapToTranslate, selectedLocales);
 
-            return Promise.all(translationPromises).then(function (
-              translatedMessages
-            ) {
-              var translatedContent = {};
-              translatedMessages.forEach(function (translatedMessage) {
-                translatedContent[translatedMessage.key] = {
-                  message: translatedMessage.message,
-                };
-              });
-              zip.file(
-                "_locales/" + locale + "/messages.json",
-                JSON.stringify(translatedContent, null, 2)
-              );
-              updateTranslationProgress(
-                ++translatedCount,
-                selectedLocales.length
-              );
-            });
+        return sendTranslationRequest(requestBody)
+          .then(function (translatedMessages) {
+            processTranslatedMessages(translatedMessages, selectedLocales, zip, translatedCount);
+            handleTranslationResult();
+          })
+          .catch(function (error) {
+            displayTranslateError("Error translating extension: " + error.message);
           });
+      });
+  });
+}
 
-          Promise.all(translatePromises)
-            .then(function () {
-              enableDownloadButton();
-              displayTranslateSuccess("Extension translated successfully!");
-              setActiveCard("downloadCard");
-            })
-            .catch(function (error) {
-              displayTranslateError(
-                "Error translating extension: " + error.message
-              );
-            });
-        });
+function getMapToTranslate(messages) {
+  var mapToTranslate = {};
+  Object.keys(messages).forEach(function (key) {
+    mapToTranslate[key] = messages[key].message;
+  });
+  return mapToTranslate;
+}
+
+function createRequestBody(mapToTranslate, targetLocales) {
+  return {
+    mapToTranslate: mapToTranslate,
+    targetLocales: targetLocales,
+  };
+}
+
+function sendTranslationRequest(requestBody) {
+  return fetch("https://us-central1-xtension-project.cloudfunctions.net/translate2", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+function processTranslatedMessages(translatedMessages, selectedLocales, zip, translatedCount) {
+  selectedLocales.forEach(function (locale) {
+    var translatedContent = {};
+    Object.keys(translatedMessages[locale]).forEach(function (key) {
+      translatedContent[key] = {
+        message: translatedMessages[locale][key],
+      };
     });
-  }
+    zip.file("_locales/" + locale + "/messages.json", JSON.stringify(translatedContent, null, 2));
+    updateTranslationProgress(++translatedCount, selectedLocales.length);
+  });
+}
+
+function handleTranslationResult() {
+  enableDownloadButton();
+  displayTranslateSuccess("Extension translated successfully!");
+  setActiveCard("downloadCard");
+}
+
+function translateMessagesForLocale(messages, locale, apiKey) {
+  return Object.keys(messages).map(function (key) {
+    var message = messages[key].message;
+    var url = "https://translation.googleapis.com/language/translate/v2?key=" + apiKey;
+    url += "&q=" + encodeURIComponent(message);
+    url += "&target=" + locale;
+    return fetch(url)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        return {
+          key: key,
+          message: data.data.translations[0].translatedText,
+        };
+      });
+  });
+}
+
+function processTranslatedMessages(translationPromises, zip, locale, selectedLocales, translatedCount) {
+  return Promise.all(translationPromises).then(function (translatedMessages) {
+    var translatedContent = {};
+    translatedMessages.forEach(function (translatedMessage) {
+      translatedContent[translatedMessage.key] = {
+        message: translatedMessage.message,
+      };
+    });
+    zip.file("_locales/" + locale + "/messages.json", JSON.stringify(translatedContent, null, 2));
+    updateTranslationProgress(++translatedCount, selectedLocales.length);
+  });
+}
 
   // Function to enable the download button
   function enableDownloadButton() {
@@ -612,14 +652,23 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Function to handle the click event of the download button
   function handleDownloadButtonClick() {
     if (uploadedZip) {
-      downloadTranslatedExtension(uploadedZip);
+      var downloadButton = document.getElementById("downloadBtn");
+      showLoadingSpinner(downloadButton);
+      downloadTranslatedExtension(uploadedZip)
+        .then(() => {
+          removeLoadingSpinner(downloadButton);
+        })
+        .catch((error) => {
+          removeLoadingSpinner(downloadButton);
+          displayDownloadError("Error downloading extension: " + error.message);
+        });
     }
   }
 
   // Function to download the translated extension
   function downloadTranslatedExtension(zip) {
-    JSZip.loadAsync(zip).then(function (zip) {
-      zip.generateAsync({ type: "blob" }).then(function (content) {
+    return JSZip.loadAsync(zip).then(function (zip) {
+      return zip.generateAsync({ type: "blob" }).then(function (content) {
         var link = document.createElement("a");
         link.href = URL.createObjectURL(content);
         link.download = "translated_extension.zip";
@@ -635,9 +684,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     var extensionIdPattern =
       /^https?:\/\/chromewebstore.google.com\/detail(?:\/[^\/]+)?\/([a-z]{32})(?=[\/#?]|$)/;
     var match = extensionUrl.match(extensionIdPattern);
+
+    var fetchButton = document.getElementById("fetchExtensionBtn");
     if (match && match[1]) {
       var extensionId = match[1];
-      fetchExtensionFromWebStore(extensionId);
+      showLoadingSpinner(fetchButton);
+      fetchExtensionFromWebStore(extensionId).then(() => {
+        removeLoadingSpinner(fetchButton);
+      }).catch(error => {
+        removeLoadingSpinner(fetchButton);
+      });
       gtag("event", "click", {
         event_category: "Fetch Extension",
         event_label: "Fetch Button",
@@ -654,7 +710,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Function to fetch extension from Chrome Web Store
   function fetchExtensionFromWebStore(extensionId) {
     let url = `https://us-central1-xtension-project.cloudfunctions.net/getExtensionUpdateUrl/?extensionId=${extensionId}`
-    fetch(url, {method: "GET"}).then(async (response) => {
+    return fetch(url, {method: "GET"}).then(async (response) => {
       if(!response.ok) {
         throw new Error(
             "Failed to fetch extension from Chrome Web Store. status: ",
@@ -763,25 +819,21 @@ document.addEventListener("DOMContentLoaded", async function () {
       "Target Locales: " + selectedLocales.join(", ");
   }
 
-  // Function to set the default locales checked
-  function setDefaultLocalesChecked() {
-    var checkboxes = document.querySelectorAll(
-      '#localesList input[type="checkbox"]'
-    );
-    checkboxes.forEach(function (checkbox) {
-      checkbox.checked = defaultLocales.includes(checkbox.value);
-    });
-    updateSelectedLocales(getSelectedLocales());
+  // Function to show the loading spinner on a button
+  function showLoadingSpinner(button) {
+    button.setAttribute('data-original-text', button.innerHTML);
+    var loadingText = button.getAttribute('data-loading-text');
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + loadingText;
+    button.disabled = true;
   }
 
-  document
-    .querySelectorAll('#localesList input[type="checkbox"]')
-    .forEach(function (checkbox) {
-      checkbox.addEventListener("change", handleLocaleCheckboxChange);
-    });
+  // Function to remove the loading spinner from a button
+  function removeLoadingSpinner(button) {
+    var originalText = button.getAttribute('data-original-text');
+    button.innerHTML = originalText;
+    button.disabled = false;
+  }
 
-  // Set the default locales checked on page load
-  setDefaultLocalesChecked();
 
   // Event listeners
   document
