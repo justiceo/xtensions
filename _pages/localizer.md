@@ -7,7 +7,6 @@ permalink: "/localizer"
 
 <body>
   <section>
-    <!-- <h1>Automatically translate browser extensions</h1> -->
     <p class="mt-5">Translate your Chrome and Firefox extension to the <a href="https://developer.chrome.com/docs/extensions/reference/api/i18n#locales">52 supported locales</a> automatically, for free. </p>
     <p class="mt-4"><span class="drop-cap bg-warning">17.9%</span> Percentage of internet users who are fluent in English. For context, English is the most popular language in the world followed by Chinese at 14.3%. This highlights the importance of i18n to reaching a global audience.</p>
     <p class="mt-4"><span class="drop-cap bg-danger text-white">12.3%</span> Percentage of chrome extensions that are available in more than one language, based on data from <a href="https://chrome-stats.com/extension-stats">chrome-stats.com</a>. This underscores the difficulty of internationalizing a browser extension</p>
@@ -21,8 +20,8 @@ permalink: "/localizer"
           <input type="file" id="uploadZip" accept=".zip" style="display: none;">
           <button class="btn btn-primary" id="uploadBtn">Upload extension .zip</button>
         </div>
-        <p class="text-center mt-2 d-none">OR</p>
-        <div class="input-group mb-3 mt-3 d-none">
+        <p class="text-center mt-2">OR</p>
+        <div class="input-group mb-3 mt-3">
           <input type="text" id="extensionUrl" class="form-control" placeholder="Enter Chrome extension URL">
           <div class="input-group-append">
             <button class="btn btn-primary" type="button" id="fetchExtensionBtn">Fetch extension</button>
@@ -654,22 +653,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Function to fetch extension from Chrome Web Store
   function fetchExtensionFromWebStore(extensionId) {
-    var url = `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=91.0.1609.0&acceptformat=crx2,crx3&x=id%3D${extensionId}%26uc`;
-    fetch(url, { method: "POST", mode: "no-cors", redirect: "follow" })
-      .then(function (response) {
-        console.log("response", response);
-        if (response.ok) {
-          return response.blob();
-        } else {
-          throw new Error(
+    let url = `https://us-central1-xtension-project.cloudfunctions.net/getExtensionUpdateUrl/?extensionId=${extensionId}`
+    fetch(url, {method: "GET"}).then(async (response) => {
+      if(!response.ok) {
+        throw new Error(
             "Failed to fetch extension from Chrome Web Store. status: ",
             response.status,
             response
           );
-        }
-      })
-      .then(function (blob) {
-        uploadedZip = new File([blob], "extension.zip", {
+      }
+
+      const data = await response.json();
+      const blob = extractZipFromCRX(new Uint8Array(data.data.data));
+      uploadedZip = new File([blob], "extension.zip", {
           type: "application/zip",
         });
         extractManifestFromZip(uploadedZip);
@@ -677,14 +673,23 @@ document.addEventListener("DOMContentLoaded", async function () {
           event_category: "Fetch Extension",
           event_label: "Success",
         });
-      })
-      .catch(function (error) {
+    }).catch(function (error) {
         displayUploadError("Error fetching extension: " + error.message);
         gtag("event", "error", {
           event_category: "Fetch Extension",
           event_label: "Fetch Error",
         });
       });
+  }
+      
+  function extractZipFromCRX(crxData) {
+    const zipStartOffset =
+      12 +
+      (crxData[8] +
+        (crxData[9] << 8) +
+        (crxData[10] << 16) +
+        ((crxData[11] << 24) >>> 0));
+    return crxData.slice(zipStartOffset);
   }
 
   // Function to display upload error message
@@ -785,9 +790,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   document
     .getElementById("uploadZip")
     .addEventListener("change", handleFileInputChange);
-  // document
-  //   .getElementById("fetchExtensionBtn")
-  //   .addEventListener("click", handleFetchExtensionButtonClick);
+  document
+    .getElementById("fetchExtensionBtn")
+    .addEventListener("click", handleFetchExtensionButtonClick);
   document
     .getElementById("selectLocalesLink")
     .addEventListener("click", handleSelectLocalesLinkClick);
