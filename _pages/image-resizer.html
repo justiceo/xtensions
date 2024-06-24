@@ -1,304 +1,314 @@
 ---
 layout: page
 title: "Image Resize for Browser Extensions"
-description: "Automatically generate icons, screenshots, promotional images (tile and marquee) for your browser extension"
+description: "Automatically generate icons, screenshots, promotional images (tile and marquee) for your browser
+extension"
 permalink: "/image-resizer"
 ---
 
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                      <div id="upload-area" class="upload-area">
-                          <p>Drag and drop an image here, or click to select a file</p>
-                          <input type="file" id="file-input" accept="image/*" style="display: none;">
-                      </div>
-                      <div id="upload-notice" class="mt-3 text-center" style="display: none;"></div>
-                </div>
-
-                <div class="mt-4 text-center">
-                    <h6>Asset Type</h6>
-                    <div class="btn-group" role="group">
-                        <input type="radio" class="btn-check" name="asset-type" id="icon" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="icon">Icon</label>
-
-                        <input type="radio" class="btn-check" name="asset-type" id="screenshot" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="screenshot">Screenshot</label>
-
-                        <input type="radio" class="btn-check" name="asset-type" id="tile" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="tile">Promo Tile</label>
-
-                        <input type="radio" class="btn-check" name="asset-type" id="marquee" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="marquee">Marquee</label>
-                    </div>
-                </div>
-
-                <div class="mt-4 text-center">
-                    <h6>Resize Strategy</h6>
-                    <div class="btn-group" role="group">
-                        <input type="radio" class="btn-check" name="resize-strategy" id="none" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="none">None</label>
-
-                        <input type="radio" class="btn-check" name="resize-strategy" id="fill" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="fill">Fill</label>
-
-                        <input type="radio" class="btn-check" name="resize-strategy" id="cover" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="cover">Cover</label>
-
-                        <input type="radio" class="btn-check" name="resize-strategy" id="contain" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="contain">Contain</label>
-                    </div>
-                </div>
-
-                <div class="mt-4 text-center">
-                    <h6>Preview</h6>
-                    <img id="preview-image" class="preview-image" src="/api/placeholder/400/300" alt="Preview">
-                </div>
-
-                <div class="mt-4 text-center">
-                    <p id="file-list" class="file-list"></p>
-                    <button id="download-button" class="btn btn-primary" disabled>Download Images</button>
-                    <div id="error-notice" class="error-notice" style="display: none;"></div>
-                </div>
-            </div>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div id="upload-area" class="upload-area">
+          <svg width="34px" class="upload-icon mt-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <p class="mt-2">Drag and drop an image here, <br>or click to select a file</p>
+          <input type="file" id="file-input" accept="image/*" style="display: none;">
         </div>
+        <div id="upload-notice" class="mt-3 text-center" style="display: none;"></div>
+
+        <div class="mt-4 text-center">
+          <h6>Asset Type</h6>
+          <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="asset-type" id="icon" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="icon">Icon</label>
+
+            <input type="radio" class="btn-check" name="asset-type" id="screenshot" autocomplete="off">
+            <label class="btn btn-outline-primary" for="screenshot">Screenshot</label>
+
+            <input type="radio" class="btn-check" name="asset-type" id="tile" autocomplete="off">
+            <label class="btn btn-outline-primary" for="tile">Promo Tile</label>
+
+            <input type="radio" class="btn-check" name="asset-type" id="marquee" autocomplete="off">
+            <label class="btn btn-outline-primary" for="marquee">Marquee</label>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <h6>Resize Strategy</h6>
+          <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="resize-strategy" id="none" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="none">None</label>
+
+            <input type="radio" class="btn-check" name="resize-strategy" id="fill" autocomplete="off">
+            <label class="btn btn-outline-primary" for="fill">Fill</label>
+
+            <input type="radio" class="btn-check" name="resize-strategy" id="cover" autocomplete="off">
+            <label class="btn btn-outline-primary" for="cover">Cover</label>
+
+            <input type="radio" class="btn-check" name="resize-strategy" id="contain" autocomplete="off">
+            <label class="btn btn-outline-primary" for="contain">Contain</label>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <h6>Preview</h6>
+          <img id="preview-image" class="preview-image"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg" alt="Preview">
+        </div>
+
+        <div class="mt-4 text-center">
+          <p id="file-list" class="file-list"></p>
+          <button id="download-button" class="btn btn-primary" disabled>Download Images</button>
+          <div id="error-notice" class="error-notice" style="display: none;"></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-    <style>
-        .upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-        }
-        .upload-area.dragover {
-            background-color: #f8f9fa;
-            border-color: #0d6efd;
-        }
-        .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            margin-top: 20px;
-        }
-        .file-list {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-        .error-notice {
-            color: #dc3545;
-            margin-top: 10px;
-        }
-    </style>
-    <script>
-        const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('file-input');
-        const uploadNotice = document.getElementById('upload-notice');
-        const previewImage = document.getElementById('preview-image');
-        const downloadButton = document.getElementById('download-button');
-        const fileList = document.getElementById('file-list');
-        const errorNotice = document.getElementById('error-notice');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <style>
+    .upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
 
-        let originalImage = null;
-        let fileName = '';
+    .upload-area.dragover {
+      background-color: #f8f9fa;
+      border-color: #0d6efd;
+    }
 
-        const assetTypes = {
-            icon: [
-                { width: 16, height: 16 },
-                { width: 24, height: 24 },
-                { width: 32, height: 32 },
-                { width: 48, height: 48 },
-                { width: 128, height: 128 },
-            ],
-            screenshot: [
-                { width: 1280, height: 800 },
-                { width: 640, height: 400 },
-            ],
-            tile: [{ width: 440, height: 280 }],
-            marquee: [{ width: 1400, height: 560 }],
-        };
+    .preview-image {
+      max-width: 100%;
+      max-height: 300px;
+      margin-top: 20px;
+    }
 
-        uploadArea.addEventListener('click', () => fileInput.click());
+    .file-list {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
 
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
+    .error-notice {
+      color: #dc3545;
+      margin-top: 10px;
+    }
+  </style>
+  <script>
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('file-input');
+    const uploadNotice = document.getElementById('upload-notice');
+    const previewImage = document.getElementById('preview-image');
+    const downloadButton = document.getElementById('download-button');
+    const fileList = document.getElementById('file-list');
+    const errorNotice = document.getElementById('error-notice');
+
+    let originalImage = null;
+    let fileName = '';
+
+    const assetTypes = {
+      icon: [
+        { width: 16, height: 16 },
+        { width: 24, height: 24 },
+        { width: 32, height: 32 },
+        { width: 48, height: 48 },
+        { width: 128, height: 128 },
+      ],
+      screenshot: [
+        { width: 1280, height: 800 },
+        { width: 640, height: 400 },
+      ],
+      tile: [{ width: 440, height: 280 }],
+      marquee: [{ width: 1400, height: 560 }],
+    };
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    document.querySelectorAll('input[name="asset-type"], input[name="resize-strategy"]').forEach(input => {
+      input.addEventListener('change', updatePreviewAndFileList);
+    });
+
+    function handleFiles(files) {
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+          fileName = file.name.split('.')[0];
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              originalImage = img;
+              updatePreviewAndFileList();
+              downloadButton.disabled = false;
+              uploadNotice.innerHTML = `File: ${file.name}<br>Resolution: ${img.width}x${img.height}`;
+              uploadNotice.style.display = 'block';
+              uploadNotice.classList.remove('error-notice');
+            };
+            img.onerror = () => {
+              displayUploadError('Error loading image');
+            };
+            img.src = e.target.result;
+          };
+          reader.onerror = () => {
+            displayUploadError('Error reading file');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          displayUploadError('Error: Please select a valid image file.');
+        }
+      }
+    }
+
+    function displayUploadError(message) {
+      uploadNotice.innerHTML = message;
+      uploadNotice.style.display = 'block';
+      uploadNotice.classList.add('error-notice');
+      downloadButton.disabled = true;
+      originalImage = null;
+      fileName = '';
+      previewImage.src = '/api/placeholder/400/300';
+      fileList.innerHTML = '';
+    }
+
+    function displayError(message) {
+      errorNotice.innerHTML = message;
+      errorNotice.style.display = 'block';
+    }
+
+    function clearError() {
+      errorNotice.innerHTML = '';
+      errorNotice.style.display = 'none';
+    }
+
+    function updatePreviewAndFileList() {
+      if (!originalImage) return;
+
+      const assetType = document.querySelector('input[name="asset-type"]:checked').id;
+      const resizeStrategy = document.querySelector('input[name="resize-strategy"]:checked').id;
+      const targetSizes = assetTypes[assetType];
+      const largestSize = targetSizes[targetSizes.length - 1];
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const resizedImage = resizeImage(originalImage, largestSize.width, largestSize.height, resizeStrategy, canvas, ctx);
+
+      previewImage.src = resizedImage;
+
+      const fileNames = targetSizes.map(size => `${fileName}-${size.width}x${size.height}.png`);
+      fileList.innerHTML = fileNames.join(' &bull; ');
+    }
+
+    function resizeImage(img, targetWidth, targetHeight, strategy, canvas, ctx) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+
+      const imgRatio = img.width / img.height;
+      const targetRatio = targetWidth / targetHeight;
+
+      let sx, sy, sWidth, sHeight;
+
+      if (strategy === 'none') {
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      } else if (strategy === 'contain') {
+        if (imgRatio > targetRatio) {
+          sWidth = img.height * targetRatio;
+          sHeight = img.height;
+          sx = (img.width - sWidth) / 2;
+          sy = 0;
+        } else {
+          sWidth = img.width;
+          sHeight = img.width / targetRatio;
+          sx = 0;
+          sy = (img.height - sHeight) / 2;
+        }
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+      } else if (strategy === 'cover') {
+        if (imgRatio > targetRatio) {
+          sWidth = img.height * targetRatio;
+          sHeight = img.height;
+          sx = (img.width - sWidth) / 2;
+          sy = 0;
+        } else {
+          sWidth = img.width;
+          sHeight = img.width / targetRatio;
+          sx = 0;
+          sy = (img.height - sHeight) / 2;
+        }
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+      } else if (strategy === 'fill') {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, targetWidth, targetHeight);
+      }
+
+      return canvas.toDataURL('image/png');
+    }
+
+    downloadButton.addEventListener('click', () => {
+      if (!originalImage) {
+        displayError('No image uploaded. Please upload an image first.');
+        return;
+      }
+
+      clearError();
+      const assetType = document.querySelector('input[name="asset-type"]:checked').id;
+      const resizeStrategy = document.querySelector('input[name="resize-strategy"]:checked').id;
+      const targetSizes = assetTypes[assetType];
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const resizedImages = targetSizes.map(size => {
+        return resizeImage(originalImage, size.width, size.height, resizeStrategy, canvas, ctx);
+      });
+
+      if (resizedImages.length === 1) {
+        const link = document.createElement('a');
+        link.href = resizedImages[0];
+        link.download = `${fileName}-${targetSizes[0].width}x${targetSizes[0].height}.png`;
+        link.click();
+      } else {
+        const zip = new JSZip();
+        resizedImages.forEach((dataUrl, index) => {
+          const size = targetSizes[index];
+          const base64Data = dataUrl.split(',')[1];
+          zip.file(`${fileName}-${size.width}x${size.height}.png`, base64Data, { base64: true });
         });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
+        zip.generateAsync({ type: 'blob' }).then(content => {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(content);
+          link.download = `${fileName}-${assetType}.zip`;
+          link.click();
+          URL.revokeObjectURL(link.href);
+        }).catch(err => {
+          displayError(`Error creating zip file: ${err.message}`);
         });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
-        document.querySelectorAll('input[name="asset-type"], input[name="resize-strategy"]').forEach(input => {
-            input.addEventListener('change', updatePreviewAndFileList);
-        });
-
-        function handleFiles(files) {
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type.startsWith('image/')) {
-                    fileName = file.name.split('.')[0];
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const img = new Image();
-                        img.onload = () => {
-                            originalImage = img;
-                            updatePreviewAndFileList();
-                            downloadButton.disabled = false;
-                            uploadNotice.innerHTML = `File: ${file.name}<br>Resolution: ${img.width}x${img.height}`;
-                            uploadNotice.style.display = 'block';
-                            uploadNotice.classList.remove('error-notice');
-                        };
-                        img.onerror = () => {
-                            displayUploadError('Error loading image');
-                        };
-                        img.src = e.target.result;
-                    };
-                    reader.onerror = () => {
-                        displayUploadError('Error reading file');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    displayUploadError('Error: Please select a valid image file.');
-                }
-            }
-        }
-
-        function displayUploadError(message) {
-            uploadNotice.innerHTML = message;
-            uploadNotice.style.display = 'block';
-            uploadNotice.classList.add('error-notice');
-            downloadButton.disabled = true;
-            originalImage = null;
-            fileName = '';
-            previewImage.src = '/api/placeholder/400/300';
-            fileList.innerHTML = '';
-        }
-
-        function displayError(message) {
-            errorNotice.innerHTML = message;
-            errorNotice.style.display = 'block';
-        }
-
-        function clearError() {
-            errorNotice.innerHTML = '';
-            errorNotice.style.display = 'none';
-        }
-
-        function updatePreviewAndFileList() {
-            if (!originalImage) return;
-
-            const assetType = document.querySelector('input[name="asset-type"]:checked').id;
-            const resizeStrategy = document.querySelector('input[name="resize-strategy"]:checked').id;
-            const targetSizes = assetTypes[assetType];
-            const largestSize = targetSizes[targetSizes.length - 1];
-
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const resizedImage = resizeImage(originalImage, largestSize.width, largestSize.height, resizeStrategy, canvas, ctx);
-
-            previewImage.src = resizedImage;
-
-            const fileNames = targetSizes.map(size => `${fileName}-${size.width}x${size.height}.png`);
-            fileList.innerHTML = fileNames.join(' &bull; ');
-        }
-
-        function resizeImage(img, targetWidth, targetHeight, strategy, canvas, ctx) {
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-
-            const imgRatio = img.width / img.height;
-            const targetRatio = targetWidth / targetHeight;
-
-            let sx, sy, sWidth, sHeight;
-
-            if (strategy === 'none') {
-                ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-            } else if (strategy === 'contain') {
-                if (imgRatio > targetRatio) {
-                    sWidth = img.height * targetRatio;
-                    sHeight = img.height;
-                    sx = (img.width - sWidth) / 2;
-                    sy = 0;
-                } else {
-                    sWidth = img.width;
-                    sHeight = img.width / targetRatio;
-                    sx = 0;
-                    sy = (img.height - sHeight) / 2;
-                }
-                ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
-            } else if (strategy === 'cover') {
-                if (imgRatio > targetRatio) {
-                    sWidth = img.height * targetRatio;
-                    sHeight = img.height;
-                    sx = (img.width - sWidth) / 2;
-                    sy = 0;
-                } else {
-                    sWidth = img.width;
-                    sHeight = img.width / targetRatio;
-                    sx = 0;
-                    sy = (img.height - sHeight) / 2;
-                }
-                ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
-            } else if (strategy === 'fill') {
-                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, targetWidth, targetHeight);
-            }
-
-            return canvas.toDataURL('image/png');
-        }
-
-        downloadButton.addEventListener('click', () => {
-            if (!originalImage) {
-                displayError('No image uploaded. Please upload an image first.');
-                return;
-            }
-
-            clearError();
-            const assetType = document.querySelector('input[name="asset-type"]:checked').id;
-            const resizeStrategy = document.querySelector('input[name="resize-strategy"]:checked').id;
-            const targetSizes = assetTypes[assetType];
-
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            const resizedImages = targetSizes.map(size => {
-                return resizeImage(originalImage, size.width, size.height, resizeStrategy, canvas, ctx);
-            });
-
-            if (resizedImages.length === 1) {
-                const link = document.createElement('a');
-                link.href = resizedImages[0];
-                link.download = `${fileName}-${targetSizes[0].width}x${targetSizes[0].height}.png`;
-                link.click();
-            } else {
-                const zip = new JSZip();
-                resizedImages.forEach((dataUrl, index) => {
-                    const size = targetSizes[index];
-                    const base64Data = dataUrl.split(',')[1];
-                    zip.file(`${fileName}-${size.width}x${size.height}.png`, base64Data, {base64: true});
-                });
-                zip.generateAsync({type: 'blob'}).then(content => {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(content);
-                    link.download = `${fileName}-${assetType}.zip`;
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }).catch(err => {
-                    displayError(`Error creating zip file: ${err.message}`);
-                });
-            }
-        });
-    </script>
+      }
+    });
+  </script>
 </body>
